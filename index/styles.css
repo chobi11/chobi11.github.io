@@ -1,0 +1,397 @@
+body {
+    background-color: #000000;
+    position: relative;
+}
+
+img {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-left: 15px;
+    margin-bottom: 10px;
+}
+body > div.images > img{
+    
+    object-fit: cover;
+    width:480;
+    height:400;
+}
+
+body > div.images img:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+/* The Modal (background) */
+#image-viewer {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    /*padding-top: 100px;*/
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.95);
+}
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 100%;
+}
+.modal-content { 
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+.close{
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    transform: rotate(45deg);
+    font-size: 40px;
+    font-weight: bold;
+    border-radius: 24px;
+    padding-left: 12px;
+    width: 35px;
+    transition: 0.5s;
+    z-index: 3;
+}
+.fullscreen {
+    z-index:1;
+    position: absolute;
+    top: 16px;
+    right: 100px;
+    width: 20px;
+    padding: 13px;
+    border-radius: 22px;
+    transition: 0.5s;
+    -webkit-filter: drop-shadow(1px 1px 1px #222);
+  filter: drop-shadow(1px 1px 1px #222);
+}
+.play {
+    position: absolute;
+    top: 17px;
+    right: 150px;
+    width: 24px;
+    padding: 11px;
+    border-radius: 22px;
+    transition: 0.5s;
+    -webkit-filter: drop-shadow(1px 1px 1px #222);
+  filter: drop-shadow(1px 1px 1px #222);
+    z-index: 1;
+}
+.playl {
+    top: 92.5%;
+    right: 42%;
+}
+.arrow {
+    position: absolute;
+    margin-top: 20%;
+    text-align: center;
+    color: #dfcbcb;
+    font-size: 40px;
+    font-family: "Wide Latin";
+    font-weight: bold;
+    width: 40px;
+    border-radius: 84px;
+    transition: 0.5s;
+    z-index: 1;
+}.left {
+    left: 45px;
+    padding-right: 7px;
+}
+.right {
+    right: 45px;
+    padding-left: 9px;
+}
+.leftl {
+    left: 47%;
+    bottom: 10px;
+    padding-right: 7px;
+    text-shadow: 1px 1px 10px black;
+}
+.rightl {
+    right: 47%;
+    bottom: 10px;
+    padding-left: 7px;
+    text-shadow: 1px 1px 10px black;
+}
+
+
+
+img#full-image {
+    max-height: 100%;
+    min-height: 100%;
+}
+#full-image{
+    width: auto !important;
+    height: auto !important;
+}
+
+img.phide {
+    position: fixed;
+    top: 30px !important;
+    right: 40px;
+    width: 90px !important;
+    z-index: 1;
+    margin-left: unset;
+    margin-bottom: unset;
+}
+.phideb {
+    left: 18px;
+}
+img.play.del {
+    right: 48%;
+    z-index: 1;
+}
+/*.reload{
+    opacity: .6;
+    zoom: .6;
+}*/
+.opt {
+    width: 3em  !important;
+    padding: 2em;
+    display: none;
+    opacity: .6 !important;
+    position: fixed;
+    top: 90%;
+    z-index: 999999;
+}
+@media only screen and (min-width: 1001px){
+
+.fullscreen:hover {
+    
+    background: #334646;
+}
+.play:hover {
+    
+    background: #334646;
+}
+.rightl, .leftl, .playl {
+    opacity: .5;
+}
+.arrow:hover,
+.arrow:focus {
+    text-decoration: none;
+    color: #a38888;
+    cursor: pointer;
+    background: #121515;
+}
+.left:hover, .left:focus {
+    left: 40px !important;
+}
+.right:hover, .right:focus {
+    right: 40px !important;
+}
+
+.close:hover,.close:focus{
+    text-decoration: none;
+    cursor: pointer;
+    background: #334646;
+}
+.phide,.bar {
+    display: none;
+}
+.reload {
+    zoom: .3 !important;
+    opacity: .5 !important;
+}
+.del {
+    left: 30;
+}
+}
+
+@media only screen and (max-width: 1000px){
+    
+    .modal-content {
+        width: 50%;
+    }
+    body > div.images > img{
+    
+    object-fit: cover;
+    width:935;
+    height:700;
+}
+
+    img#full-image {
+    min-height: 100%;
+    min-width: 100%;
+    object-fit: contain;
+}
+#image-viewer {
+    display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.arrow {
+    display: none;
+    }
+.close {
+    top: -25px;
+    right: 100px;
+    opacity: 0.7;
+    font-size: 280px;
+    width: 90px;
+}
+
+.play{
+        top: 55px;
+    right: 270px;
+    width: 55px;
+    opacity: 0.7;
+}
+.playl{
+    left: 210px;
+    width: 55px;
+    opacity: 0.7;
+}
+.bar {
+    position: absolute;
+    color: white;
+    opacity: .5;
+    font-size: 100px;
+    align-items: flex-start;
+    top: 55%;
+}
+.fullscreen {
+    position: fixed;
+    top: 10em !important;
+    width: 3em !important;
+    z-index: 999999;
+    left: 1em;
+    opacity: .6 !important;
+    padding: 1em;
+    margin-left: unset; 
+    margin-bottom: unset;
+}
+#snackbar {
+  zoom: 2;
+}
+
+.opt {
+    display: block;
+    margin-left: unset;
+    margin-bottom: unset;
+}
+}
+@media only screen and (max-height: 1000px) and (max-width: 1000px) {
+    img#full-image {
+    max-height: 100%;
+    min-height: 100%;
+    min-width: auto;
+    object-fit: contain;
+}
+div.images > img {
+    width: 32.5% !important;
+    height: 60% !important;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+.arrow {
+    display: none;
+    }
+.close, .play {
+    zoom: .5;
+    opacity: .5;
+}
+.playl {
+    top: 35 !important;
+    left: 240px;
+}
+.play {
+    top: 30 !important;
+}
+.close{
+    top: -60px !important;
+}
+img.phide {
+    top: 10px !important;
+    right: 10px;
+    width: 40px !important;
+    
+}
+.bar {
+    top: 40%;
+}
+.fullscreen {
+    top: 5em !important;
+    width: 1.5em !important;
+    filter: unset;
+    padding: unset;
+    border-radius: unset;
+    transition: unset;
+    right: unset;
+}
+
+#snackbar {
+  zoom: 1;
+}
+
+.opt {
+    display: block;
+z-index: 2147483647;
+}
+
+img.opt {
+    top: 80%;
+    width: 1.5em  !important;
+    padding: 1em;
+}
+
+}
+.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}
+
+
+
+#snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  margin-left: -125px;
+  background-color: #4d21416e;
+  color: #fff;
+  text-align: center;
+  border-radius: 2px;
+  padding: 16px;
+  position: fixed;
+  z-index: 5;
+  left: 50%;
+  bottom: 30px;
+  font-size: 17px;
+}
+
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.2s, fadeout 0.1s 2s;
+  animation: fadein 0.2s, fadeout 0.1s 2s;
+}
+
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;} 
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;} 
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}

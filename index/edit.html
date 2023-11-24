@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Draw on an image</title>
+  <link rel="shortcut icon" href="#">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="./draw/style.css">
+   
+</head>
+<body>
+
+    <!-- partial:index.partial.html -->
+
+<section id="app">
+    <header>
+        <div class="help" :class="{show: viewState.showHelp}" @click="viewState.showHelp = !viewState.showHelp">
+            <div class="content">
+                <h1>Draw on an image</h1>
+                <span>
+                    Touch or drag to draw,<br/>
+                    pinch or scroll-wheel to zoom,<br/>
+                    two fingers or right-click to pan.
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <div id="tools">
+        <label style="display: none;"  id="image-input" class="tool-button">
+            <span style="display: none;" >Select image</span>
+            <input style="display: none;"  type="file" accept="image/*" style="display:none" />
+        </label>
+        <button style="display: none;" id="rotater"    class="tool-button" @click.prevent="rotate">Rotate</button>
+
+        <button id="eraser"       class="tool-button" :class="{ active: editor.erasing }" @click.prevent="editor.erasing = !editor.erasing">Erase</button>
+        <div    id="stroke-color" class="picker_sample"></div>
+        <label  id="stroke-width" class="tool-button">
+            <span>Stroke</span>
+            <input type="number" v-model.number="svg.stroke.width" @focus="$event.target.select()"/>
+        </label>
+
+        <button id="undoer"     class="tool-button" @click.prevent="undo">Undo</button>
+        <button id="clearer"    class="tool-button" @click.prevent="clear">Clear</button>
+
+        <button id="downloader" class="tool-button" @click.prevent="download">Download</button>
+    </div>
+
+    <div id="image">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="container">
+                <g id="image" :transform="`translate(${svg.img.pos})`">
+                    <image :xlink:href="svg.img.url" :width="svg.img.size[0]" :height="svg.img.size[1]"
+                           x="0" y="0" :transform="`rotate(${svg.img.rot * 90})`"/>
+                </g>
+                <g id="doodles" stroke-linejoin="round" stroke-linecap="round" fill="none">
+                    <doodle v-for="(d, i) in svg.doodles" v-if="!d.isErased" :dood="d" :di="i"></doodle>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+</section>
+<!-- partial -->
+<script>
+    window.onerror = function(msg, url, line) { alert('Error: '+msg+'\nURL: '+url+'\nLine: '+line); };
+    console.clear();
+</script>
+
+<script src="./draw/vue.js"></script>
+<script src="./draw/abo-utils.js"></script>
+<script src="./draw/vanilla-picker.min.js"></script>
+<script src="./draw/zoomable-svg.min.js"></script>
+<script src="./draw/drag-tracker.js"></script>
+<script src="./draw/simplify.js"></script>
+<script src="./draw/undomanager.js"></script>
+
+  <script  src="./edit_script.js"></script>
+
+</body>
+</html>
