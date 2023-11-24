@@ -714,7 +714,7 @@ function playl() {
 }
 
 if (!phone) {
-    var audio = new Audio((web)?'https://raw.githubusercontent.com/backup1122/backup1122.github.io/master/index/aaa.mpp':'./index/aaa.mpp');
+    var audio = new Audio((true)?'https://raw.githubusercontent.com/backup1122/backup1122.github.io/master/index/aaa.mpp':'./index/aaa.mpp');
     audio.volume = .1;
 
     $(window).blur(function () { // windows change
