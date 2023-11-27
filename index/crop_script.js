@@ -1,4 +1,64 @@
 
+var gitlink='https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
+const token = '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';
+const username = 'backup1122';
+const repo = 'galleryfiles';
+var blobtoDataURL = function (blob) {
+    return new Promise((resolve, reject) => {
+        var a = new FileReader();
+        a.onload = function (e) {
+            resolve(e.target.result);
+        }
+        a.readAsDataURL(blob);
+    })
+}
+
+function updateFile(path, updatedBlob) {
+  // Fetch the current content and details of the file
+  fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `token ${token}`,
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Read the Blob content as a data URL
+    const reader = new FileReader();
+    reader.onloadend = function () {
+      const base64data = reader.result.split(',')[1];
+
+      // Update the file on GitHub
+      fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'Update file',
+          content: base64data,
+          sha: data.sha,
+        }),
+      })
+      .then(response => response.json())
+      .then(updatedFile => {
+        console.log('File updated:', updatedFile);
+        parent.close_cropedit();
+        
+      })
+      .catch(error => {
+        console.error('Error updating file:', error);
+      });
+    };
+
+    reader.readAsDataURL(updatedBlob);
+  })
+  .catch(error => {
+    console.error('Error fetching file details:', error);
+  });
+}
+
 function t(e) {
     return e.complete && 0 !== e.naturalHeight && 0 !== e.naturalWidth && (function (t) {
         var e = document.getElementById("img-container");
@@ -32,7 +92,10 @@ function t(e) {
                         }
                         formData.append('src', imagesrc.replace('..', ''));
                         formData.append('form_key', window.FORM_KEY);
-
+                        path = imagesrc.replace(gitlink, '');
+                        parent.croppedImage = e;
+                        updateFile(path, e);
+/*
                         $.ajax('http://localhost:15656/func.php', {
                             method: "POST",
                             data: formData,
@@ -46,7 +109,7 @@ function t(e) {
                                 console.log(data);
                             }
                         });
-
+*/
                         //e = URL.createObjectURL(e);
                         //t.src = e, n.destroy()
                     }, 'image/jpeg')

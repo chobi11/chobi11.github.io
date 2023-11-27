@@ -3,7 +3,7 @@ var dlist = [];
 var rlist = [];
 var r1 = -1;
 var r2 = -1;
-var web = link.includes('gallery')||link.includes('github');
+var web =true;// link.includes('gallery')||link.includes('github')||true;
 if (typeof DATA == 'undefined') {
   refresh(1);
 }

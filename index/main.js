@@ -23,6 +23,7 @@ var col = 1;
 var big = 0;
 var ed = new Date().getDate() - 1;
 var rnum;
+var croppedImage;
 var cphide = 0;
 var phide1 = 0;
 var phide2 = 0;
@@ -605,9 +606,9 @@ var cropeditfunc = (a) => {
     else {
         if (big == 1) {
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? '.' + DATA[anum] : { val: '.' + timeremove(DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth };
+            cropeditval = (a == 'crop') ? DATA[anum] : { val:DATA[anum], height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth };
             var ifrm = document.createElement("iframe");
-            ifrm.setAttribute("src", "http://localhost:5656/index/" + a + ".html");
+            ifrm.setAttribute("src","http://localhost:5656/index/"+ a + ".html");
             ifrm.style.width = "100%";
             ifrm.style.height = "100%";
             ifrm.frameborder = "0"; ifrm.scrolling = "no";
@@ -628,13 +629,14 @@ var timeremove = (ssr) => {
         return ssr;
     }
 }
+
 var close_cropedit = () => {
     //console.log('calling here');
     var anum = document.querySelector("#full-image").getAttribute('num');
     document.querySelector("body > iframe").remove();
     var ttt = "?t=" + new Date().getTime();
     var ssr = timeremove(DATA[anum]);
-    DATA[anum] = ssr + ttt;
+    DATA[anum] = URL.createObjectURL(croppedImage);//ssr + ttt;
     document.querySelector("#full-image").src = DATA[anum];
 }
 function fullscreen() {
@@ -714,7 +716,7 @@ function playl() {
 }
 
 if (!phone) {
-    var audio = new Audio((true)?'https://raw.githubusercontent.com/backup1122/galleryfiles/master/index/aaa.mpp':'./index/aaa.mpp');
+    var audio = new Audio('./index/aaa.mpp');
     audio.volume = .1;
 
     $(window).blur(function () { // windows change
