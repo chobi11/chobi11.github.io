@@ -8,6 +8,41 @@ const token = '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';
 const username = 'backup1122';
 const repo = 'galleryfiles';
 
+function deleteFile(path) {
+  // Fetch the current content and details of the file
+  fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `token ${token}`,
+    },
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Delete the file on GitHub
+    fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: 'Delete file',
+        sha: data.sha,
+      }),
+    })
+    .then(response => response.json())
+    .then(deletedFile => {
+      console.log('File deleted:', deletedFile);
+    })
+    .catch(error => {
+      console.error('Error deleting file:', error);
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching file details:', error);
+  });
+}
+
 function updateFile(path, updatedBlob) {
   // Fetch the current content and details of the file
   fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
@@ -117,64 +152,8 @@ var addoutdir = () => {
       dell = 0;
     }
     cout(dell);
-    const username = 'YOUR_GITHUB_USERNAME';
-const repo = 'YOUR_REPO_NAME';
-const filePath = 'path/to/your/file.json';
-const branch = 'main'; // Replace with the branch name if not using the default branch
-
-const url = `https://api.github.com/repos/${username}/${repo}/contents/${filePath}?ref=${branch}`;
-
-// Step 1: Read the existing JSON file
-fetch(url, {
-  headers: {
-    Authorization: `token ${token}`, // Include this line for private repositories
-  },
-})
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    // Step 2: Parse the JSON content
-    const contentBase64 = data.content;
-    const content = atob(contentBase64);
-    const jsonData = JSON.parse(content);
-
-    // Step 3: Modify the parsed data
-    jsonData.push(4); // Append 4 to the array
-
-    // Step 4: Update the file with the modified data
-    const updatedContent = JSON.stringify(jsonData, null, 2); // Convert data back to JSON
-    const updatedContentBase64 = btoa(updatedContent); // Encode content to base64
-
-    // Create a new branch or use an existing one
-    const newBranchName = 'update-json-file-branch';
-
-    // Create a new commit with the updated content
-    return fetch(`https://api.github.com/repos/${username}/${repo}/git/refs/heads/${newBranchName}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `token ${token}`, // Include this line for private repositories
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ref: `refs/heads/${newBranchName}`,
-        sha: data.sha,
-      }),
-    });
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    console.log('File updated successfully!');
-  })
-  .catch(error => {
-    console.error('Error updating JSON file:', error.message);
-  });
-
+    path=ssr.replace(gitlink,'');
+    deleteFile(path);
     /*var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
       if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
