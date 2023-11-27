@@ -32,6 +32,18 @@ function deleteFile(path) {
     })
     .then(response => response.json())
     .then(deletedFile => {
+      cout(JSON.parse(this.responseText).done);
+        snackbar(JSON.parse(this.responseText).done);
+        var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
+        DATA.splice(anum, 1);
+        document.querySelector("#full-image").src = DATA[anum];
+        if (dell == 1) {
+          document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
+          //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
+        }
+        if (document.querySelector("#full-image").getAttribute('num') < document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) {
+          document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
+        }
       console.log('File deleted:', deletedFile);
     })
     .catch(error => {

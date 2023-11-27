@@ -608,7 +608,7 @@ var cropeditfunc = (a) => {
             var anum = document.querySelector("#full-image").getAttribute('num');
             cropeditval = (a == 'crop') ? DATA[anum] : { val:DATA[anum], height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth };
             var ifrm = document.createElement("iframe");
-            ifrm.setAttribute("src","http://localhost:5656/index/"+ a + ".html");
+            ifrm.setAttribute("src",(((new URL(document.URL)).hostname.includes('localhost')?"http://localhost:5656/index/":(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
             ifrm.style.width = "100%";
             ifrm.style.height = "100%";
             ifrm.frameborder = "0"; ifrm.scrolling = "no";
