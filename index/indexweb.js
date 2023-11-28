@@ -165,11 +165,7 @@ var addoutdir = () => {
       dell = 0;
     }
     cout(dell);
-    path=ssr.replace(gitlink,'');
-    //cout(JSON.parse(this.responseText).done);
-        //snackbar(JSON.parse(this.responseText).done);
-        snackbar("Deleted");
-        var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
+    var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
         DATA.splice(anum, 1);
         document.querySelector("#full-image").src = DATA[anum];
         if (dell == 1) {
@@ -179,6 +175,7 @@ var addoutdir = () => {
         if (document.querySelector("#full-image").getAttribute('num') < document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) {
           document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
         }
+    path=ssr.replace(gitlink,'');
     deleteFile(path,dell);
     /*var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
