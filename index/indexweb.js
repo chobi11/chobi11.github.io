@@ -8,7 +8,7 @@ const token = localStorage.getItem('token');
 const username = 'backup1122';
 const repo = 'galleryfiles';
 
-function deleteFile(path,dell) {
+function deleteFile(path) {
   // Fetch the current content and details of the file
   fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
     method: 'GET',
@@ -167,7 +167,7 @@ var addoutdir = () => {
           document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
         }
     path=ssr.replace(gitlink,'');
-    deleteFile(path,dell);
+    deleteFile(path);
     /*var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
       if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
