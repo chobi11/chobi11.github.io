@@ -1,6 +1,6 @@
 (function () {
   var gitlink='https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
-const token = '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';
+const token = localStorage.getItem('token');
 const username = 'backup1122';
 const repo = 'galleryfiles';
 
