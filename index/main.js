@@ -606,7 +606,7 @@ var cropeditfunc = (a) => {
     else {
         if (big == 1) {
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? {val:timeremove(DATA[anum]),web:web} : { val:timeremove(DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth,web:web };
+            cropeditval = (a == 'crop') ? {val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])),web:web} : { val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth,web:web };
             var ifrm = document.createElement("iframe");
             console.log((((new URL(document.URL)).hostname.includes('localhost')?"http://localhost:5656/index/":(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
             ifrm.setAttribute("src",(((new URL(document.URL)).hostname.includes('localhost')?"http://localhost:5656/index/":(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
