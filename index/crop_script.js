@@ -78,46 +78,62 @@ function t(e) {
             dragMode: 'move',
 
             ready: function () {
-                n.crop(), elCropBox = document.querySelector(".cropper-crop-box"), null !== elCropBox && elCropBox.addEventListener("dblclick", function (e) {
-                    n.getCroppedCanvas().toBlob(function (e) {
-                        console.log(e);
-
-                        var formData = new FormData();
-
-                        formData.append('croppedImage', e);
-                        
-                        if (imagesrc.includes('?t=')) {
-                            imagesrc = imagesrc.replace('?t=', ':');
-                            imagesrc = /(.+):/.exec(imagesrc)[1];
-                        }
-                        formData.append('src', imagesrc.replace('..', ''));
-                        formData.append('form_key', window.FORM_KEY);
-                        if(parent.web){
-                          alert('Image will be saved to github');
-                        path = imagesrc.replace(gitlink, '');
-                        parent.croppedImage = e;
-                        updateFile(path, e);}
-                        else{
-
-                        $.ajax('http://localhost:15656/func.php', {
-                            method: "POST",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (data) {
-                                //console.log(data);
-                                parent.close_cropedit();
-                            },
-                            error: function (data) {
-                                console.log(data);
-                            }
-                        });
-                        }
-                        //e = URL.createObjectURL(e);
-                        //t.src = e, n.destroy()
-                    }, 'image/jpeg')
-                })
-            }
+              n.crop();
+              elCropBox = document.querySelector(".cropper-crop-box");
+          
+              if (null !== elCropBox) {
+                  // Add double-click event listener
+                  elCropBox.addEventListener("dblclick", function (e) {
+                      n.getCroppedCanvas().toBlob(function (e) {
+                          console.log(e);
+          
+                          var formData = new FormData();
+                          formData.append('croppedImage', e);
+          
+                          if (imagesrc.includes('?t=')) {
+                              imagesrc = imagesrc.replace('?t=', ':');
+                              imagesrc = /(.+):/.exec(imagesrc)[1];
+                          }
+          
+                          formData.append('src', imagesrc.replace('..', ''));
+                          formData.append('form_key', window.FORM_KEY);
+          
+                          if (parent.web) {
+                              // Display alert only for web (GitHub) saving
+                              alert('Image will be saved to GitHub');
+                              path = imagesrc.replace(gitlink, '');
+                              parent.croppedImage = e;
+                              updateFile(path, e);
+                          } else {
+                              // Handle non-web saving (local server)
+                              $.ajax('http://localhost:15656/func.php', {
+                                  method: "POST",
+                                  data: formData,
+                                  processData: false,
+                                  contentType: false,
+                                  success: function (data) {
+                                      //console.log(data);
+                                      parent.close_cropedit();
+                                  },
+                                  error: function (data) {
+                                      console.log(data);
+                                  }
+                              });
+                          }
+                          //e = URL.createObjectURL(e);
+                          //t.src = e, n.destroy()
+                      }, 'image/jpeg');
+                  });
+          
+                  // Hammer.js double-tap event
+                  var hammer = new Hammer(elCropBox);
+                  hammer.on('doubletap', function (event) {
+                      // Call the double-click event listener
+                      elCropBox.dispatchEvent(new Event("dblclick"));
+                  });
+              }
+          }
+          
         })
     }(e), 1)
 }
