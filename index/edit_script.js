@@ -480,12 +480,13 @@ function updateFile(path, updatedBlob) {
           formData.append('src', parent.cropeditval.val.replace('..', ''));
           formData.append('form_key', window.FORM_KEY);
           var imagesrc = parent.cropeditval.val;
+          if(parent.web){
           path = imagesrc.replace(gitlink, '');
           parent.croppedImage = e;
           updateFile(path, e);
+          }
 
-
-/*
+else{
           var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function () {
             if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
@@ -499,7 +500,7 @@ function updateFile(path, updatedBlob) {
         
           //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           xhttp.send(formData);
-          */
+        }
           /*$.ajax('http://localhost:15656/func.php', {
               method: "POST",
               data: formData,

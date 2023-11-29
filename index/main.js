@@ -606,7 +606,7 @@ var cropeditfunc = (a) => {
     else {
         if (big == 1) {
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? DATA[anum] : { val:DATA[anum], height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth };
+            cropeditval = (a == 'crop') ? {val:timeremove(DATA[anum]),web:web} : { val:timeremove(DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth,web:web };
             var ifrm = document.createElement("iframe");
             ifrm.setAttribute("src",(((new URL(document.URL)).hostname.includes('localhost')?"http://localhost:5656/index/":(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
             ifrm.style.width = "100%";
@@ -636,7 +636,7 @@ var close_cropedit = () => {
     document.querySelector("body > iframe").remove();
     var ttt = "?t=" + new Date().getTime();
     var ssr = timeremove(DATA[anum]);
-    DATA[anum] = URL.createObjectURL(croppedImage);//ssr + ttt;
+    DATA[anum] = (web)?URL.createObjectURL(croppedImage):ssr + ttt;
     document.querySelector("#full-image").src = DATA[anum];
 }
 function fullscreen() {

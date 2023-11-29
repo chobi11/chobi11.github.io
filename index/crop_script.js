@@ -92,10 +92,13 @@ function t(e) {
                         }
                         formData.append('src', imagesrc.replace('..', ''));
                         formData.append('form_key', window.FORM_KEY);
+                        if(parent.web){
+                          alert('Image will be saved to github');
                         path = imagesrc.replace(gitlink, '');
                         parent.croppedImage = e;
-                        updateFile(path, e);
-/*
+                        updateFile(path, e);}
+                        else{
+
                         $.ajax('http://localhost:15656/func.php', {
                             method: "POST",
                             data: formData,
@@ -109,7 +112,7 @@ function t(e) {
                                 console.log(data);
                             }
                         });
-*/
+                        }
                         //e = URL.createObjectURL(e);
                         //t.src = e, n.destroy()
                     }, 'image/jpeg')
@@ -123,7 +126,7 @@ var height = screen.availHeight * .8;
 var width = screen.availWidth * .8;
 document.querySelector("#crop-img").style.height = height + "px";
 
-var imagesrc = parent.cropeditval;//localStorage.getItem("crop");
+var imagesrc = parent.cropeditval.val;//localStorage.getItem("crop");
 //console.log(imagesrc);
 document.querySelector("#crop-img").src = imagesrc;
 /*
