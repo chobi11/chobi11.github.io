@@ -194,7 +194,7 @@ function rotate(deg=90) {
   playstop();
   if (web) {
     cout("on web");
-    rotateout();
+    rotateout(deg);
     return;
   }
   var ssr = document.querySelector("#full-image").getAttribute("src");

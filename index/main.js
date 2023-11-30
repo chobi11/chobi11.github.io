@@ -964,7 +964,7 @@ function phnopt() {
             + ((localStorage.getItem("col") != 3) ? `<a class="subopt"  onclick="ds('f');hidephnopt();">foreign</a>` : '')
 +`</div></td></tr>`
 
-            + ((big == 1) ? ((web) ? '<tr><td><div><a class="subopt" onclick="rotateout(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotateout(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotateout(270);hidephnopt();">rotate x3</a></div></td></tr>'
+            + ((big == 1) ? ((web) ? '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>'
                 : '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>') : '')
             + ((big == 1) ?`<tr><td><div><a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="subopt"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a></div></td></tr>`:``)
             +
