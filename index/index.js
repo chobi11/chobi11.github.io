@@ -110,7 +110,9 @@ function Delete() {
   if (fulls == 1 && phone) {
     fullscreen();
   }
-  // if (confirm("Are you sure")) {
+  var sure=(phone)?confirm("Are you sure"):true;
+  
+   if (sure) {
   //   cout('y');
   var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
   var ssr = DATA[anum];
@@ -179,7 +181,7 @@ function Delete() {
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("ddir=" + ssr);
 
-  // }
+   }
   // else {
   //   cout('n');
   // }
@@ -187,7 +189,7 @@ function Delete() {
 
 
 
-function rotate() {
+function rotate(deg=90) {
 
   playstop();
   if (web) {
@@ -234,7 +236,8 @@ function rotate() {
   };
   xhttp.open("POST", "http://" + link + ":15656/func.php", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("rdir=" + ssr);
+  //send rdir and deg
+  xhttp.send("rdir=" + ssr+"&deg="+deg);
 }
 
 
