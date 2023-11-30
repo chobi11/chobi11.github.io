@@ -137,14 +137,6 @@ var get_blob2src = (dd) => {
   return dr;
 }
 var addoutdir = () => {
-            var msrc = get_blob2src(src);
-            if (msrc != "") {
-                ssr = msrc;
-            }
-            else {
-                ssr = src;
-            }
-
   var dell = 0;
   if (fulls == 1 && phone) {
     fullscreen();
