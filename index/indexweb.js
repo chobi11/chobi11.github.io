@@ -98,7 +98,7 @@ function rotateout(deg = 90) {
   if (rotatef) {
     rotatef = false;
     var src = document.querySelector("#full-image").getAttribute("src");
-    var msrc = get_rt(src);
+    var msrc = get_blob2src(src);
     if (msrc != "") {
       ssr = msrc;
     }
@@ -112,9 +112,9 @@ function rotateout(deg = 90) {
   }
 }
 
-var track_rotate = (dd, ndd) => {
+var track_blob = (dd, ndd) => {
   var f = 0;
-  rlist.forEach(function (obj) {
+  blob_list.forEach(function (obj) {
     if (obj.ndir === dd) {
       f = 1;
       obj.ndir = ndd;
@@ -122,13 +122,13 @@ var track_rotate = (dd, ndd) => {
   });
   if (f == 0) {
     //console.log(44);
-    rlist.push({ ndir: ndd, dir: dd });
+    blob_list.push({ ndir: ndd, dir: dd });
   }
-  console.log(rlist);
+  console.log(blob_list);
 }
-var get_rt = (dd) => {
+var get_blob2src = (dd) => {
   var dr = "";
-  rlist.forEach(function (obj) {
+  blob_list.forEach(function (obj) {
     if (obj.ndir === dd) {
       //console.log(obj.dir);
       dr = obj.dir;
@@ -368,14 +368,14 @@ var rotater = (deg, src) => {
   rotatef = true;
   const imgr = document.querySelector("#full-image");
   var psrc = imgr.attributes.src.value;
-  rotateweb(imgr.attributes.src.value, deg, function (resultBase64) {
+  rotateweb(psrc, deg, function (resultBase64) {
     imgr.setAttribute('src', resultBase64);
     var nsrc = resultBase64;
     if (psrc == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
       document.querySelector("body > div.images > img:nth-child(" + now + ")").src = resultBase64;
     }
     DATA[parseInt(imgr.getAttribute('num'))] = resultBase64;
-    track_rotate(psrc, nsrc);
+    track_blob(psrc, nsrc);
     var path = src.replace(gitlink, '');
     var updatedBlob = dataURItoBlob(resultBase64);
     updateFile(path, updatedBlob);

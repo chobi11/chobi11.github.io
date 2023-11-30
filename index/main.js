@@ -195,9 +195,9 @@ function jq() {
 }
 function closeviewer() {
     $('body').removeClass('stop-scrolling')
-                    $('#image-viewer').fadeOut(200);
-                    big = 0; unpan();
-                    leftRightTrack=0;
+    $('#image-viewer').fadeOut(200);
+    big = 0; unpan();
+    leftRightTrack = 0;
 }
 
 aTag = document.querySelector(".phidem");
@@ -313,7 +313,7 @@ if (!phone) {
             localStorage.setItem('hider', 'off');
 
         }
-        else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && [186,111, 222].includes(ev.keyCode)) {
+        else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && [186, 111, 222].includes(ev.keyCode)) {
             unhide(ev.keyCode);
 
 
@@ -324,7 +324,7 @@ if (!phone) {
 
 
         }
-        else if ([186,111, 222].includes(ev.keyCode)) {//;/'/numpad/
+        else if ([186, 111, 222].includes(ev.keyCode)) {//;/'/numpad/
             hide(ev.keyCode);
 
 
@@ -387,7 +387,7 @@ if (!phone) {
         else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 85) {
             //unhide(ev.keyCode);  
             if (big == 1) {
-                
+
                 //playstop();
                 rotate();
             }
@@ -419,9 +419,10 @@ if (!phone) {
         //end server work
         // start change gallery
         else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 70) {
-            if((localStorage.getItem("col") == 2)){ds('f');}
-            else{
-            ds('d');}
+            if ((localStorage.getItem("col") == 2)) { ds('f'); }
+            else {
+                ds('d');
+            }
         } else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 68) {
             //ds('f');
         } else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 71) {
@@ -597,7 +598,7 @@ function idleTimerFunc() {
     }
 }
 var cropeditfunc = (a) => {
-    
+
     playstop();
     if (document.querySelector("body > iframe") !== null) {
         document.querySelector("body > iframe").remove();
@@ -605,18 +606,26 @@ var cropeditfunc = (a) => {
     }
     else {
         if (big == 1) {
+            var src = document.querySelector("#full-image").getAttribute("src");
+            var msrc = get_blob2src(src);
+            if (msrc != "") {
+                ssr = msrc;
+            }
+            else {
+                ssr = src;
+            }
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? {val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])),web:web,phone:phone} : { val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth,web:web ,phone:phone};
+            cropeditval = (a == 'crop') ? { val: ((web) ? src : '.' + timeremove(DATA[anum])), web: web, phone: phone,blob_url:DATA[anum] } : { val: ((web) ? timeremove(DATA[anum]) : '.' + timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone };
             var ifrm = document.createElement("iframe");
-            console.log((((new URL(document.URL)).hostname.includes('localhost')?"http://localhost:5656/index/":(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
-            ifrm.setAttribute("src",((document.URL.includes('5656')?"http://"+(new URL(document.URL)).hostname+":5656/index/":'https://'+(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
+            console.log((((new URL(document.URL)).hostname.includes('localhost') ? "http://localhost:5656/index/" : (new URL(document.URL)).hostname + "/index/")) + a + ".html");
+            ifrm.setAttribute("src", ((document.URL.includes('5656') ? "http://" + (new URL(document.URL)).hostname + ":5656/index/" : 'https://' + (new URL(document.URL)).hostname + "/index/")) + a + ".html");
             ifrm.style.width = "100%";
             ifrm.style.height = "100%";
             ifrm.frameborder = "0"; ifrm.scrolling = "no";
             document.querySelector("body").appendChild(ifrm);
-            var len = (phone&&a == 'crop')?'90':'100';
+            var len = (phone && a == 'crop') ? '90' : '100';
             console.log(phone);
-            document.querySelector("body > iframe").style = "width: "+len+"%;height: "+len+"%;display: block;left: 0;top:0px;position: fixed;z-index: 1;";
+            document.querySelector("body > iframe").style = "width: " + len + "%;height: " + len + "%;display: block;left: 0;top:0px;position: fixed;z-index: 1;";
 
         }
         else { snackbar('no image to crop'); }
@@ -639,7 +648,7 @@ var close_cropedit = () => {
     document.querySelector("body > iframe").remove();
     var ttt = "?t=" + new Date().getTime();
     var ssr = timeremove(DATA[anum]);
-    DATA[anum] = (web)?URL.createObjectURL(croppedImage):ssr + ttt;
+    DATA[anum] = (web) ? URL.createObjectURL(croppedImage) : ssr + ttt;
     document.querySelector("#full-image").src = DATA[anum];
 }
 function fullscreen() {
@@ -668,7 +677,7 @@ function fullscreen() {
         fulls = 0;
     }
 }
-function playstop(){
+function playstop() {
     if (playls == 1) {
         playl();
     }
@@ -704,9 +713,10 @@ function playl() {
         document.querySelector("#image-viewer > img.playl").src = "./index/pause.bmp";
         playls = 1;
         timer = setInterval(() => {
-            if(leftRightTrack == 0){
-            rightl();}
-            else{
+            if (leftRightTrack == 0) {
+                rightl();
+            }
+            else {
                 leftl();
             }
         }, 3000);
@@ -956,17 +966,17 @@ function phnopt() {
     hider();}else{localStorage.setItem('hider','off');}">hider `+ localStorage.getItem('hider') + `</a></div></td></tr>
         <tr><td><div><a class="subopt"  onclick="hold();hidephnopt();">hold</a>&nbsp;&nbsp;
         <a class="subopt"  onclick="unholdl();hidephnopt();">unhold list</a>&nbsp;&nbsp;`
-        + ((unholdf) ? `<a class="subopt"  onclick="unholdc();hidephnopt();">undo</a>` : '')+
-        
-        `</div></td></tr><tr><td><div>`
-        + ((localStorage.getItem("col") != 1) ? `<a class="subopt"  onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
+            + ((unholdf) ? `<a class="subopt"  onclick="unholdc();hidephnopt();">undo</a>` : '') +
+
+            `</div></td></tr><tr><td><div>`
+            + ((localStorage.getItem("col") != 1) ? `<a class="subopt"  onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
             + ((localStorage.getItem("col") != 2) ? `<a class="subopt"  onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
             + ((localStorage.getItem("col") != 3) ? `<a class="subopt"  onclick="ds('f');hidephnopt();">foreign</a>` : '')
-+`</div></td></tr>`
+            + `</div></td></tr>`
 
             + ((big == 1) ? ((web) ? '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>'
                 : '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>') : '')
-            + ((big == 1) ?`<tr><td><div><a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="subopt"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a></div></td></tr>`:``)
+            + ((big == 1) ? `<tr><td><div><a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="subopt"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a></div></td></tr>` : ``)
             +
             `</table>
         
@@ -1067,67 +1077,67 @@ function hide(key) {
         }
     } else if (key == 222||key == 111) {
         */
-       
-        if (!($('.images').is(":hidden"))) {
-            //if (localStorage.getItem('hide1') == '1') {
-                localStorage.setItem('hide', 0);
-                document.title = err[ed];
+
+    if (!($('.images').is(":hidden"))) {
+        //if (localStorage.getItem('hide1') == '1') {
+        localStorage.setItem('hide', 0);
+        document.title = err[ed];
+        $('.images').hide();
+        $('.reload').hide();
+        if (big == 1) {
+            $('#image-viewer').hide();
+        }
+        /*} else {
+            if (document.querySelector("body > iframe") == null) {
                 $('.images').hide();
                 $('.reload').hide();
-                if (big == 1) {
-                    $('#image-viewer').hide();
-                }
-            /*} else {
-                if (document.querySelector("body > iframe") == null) {
-                    $('.images').hide();
-                    $('.reload').hide();
-                    var iframe = document.createElement('iframe');
-                    document.title = 'Home | AIUB';
-                    iframe.style = "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"
-                    iframe.src = 'https://www.aiub.edu/';
-                    document.body.appendChild(iframe);
-                }
-            }*/
-            if (aaudio == 1) {
-                audio.pause();
+                var iframe = document.createElement('iframe');
+                document.title = 'Home | AIUB';
+                iframe.style = "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"
+                iframe.src = 'https://www.aiub.edu/';
+                document.body.appendChild(iframe);
             }
+        }*/
+        if (aaudio == 1) {
+            audio.pause();
         }
+    }
 
     //}
 }
 
 function unhide(key) {
-/*
-    if (key == 186) {
-        if (document.querySelector("body > iframe") != null) {
-            document.querySelector("body > iframe").remove();
-            localStorage.setItem('hide1', 1);
-            jq();
-            document.title = 'Gallery';
-            $('.images').show();
-            $('.reload').show();
-            if (big == 1) {
-                $('#image-viewer').show();
+    /*
+        if (key == 186) {
+            if (document.querySelector("body > iframe") != null) {
+                document.querySelector("body > iframe").remove();
+                localStorage.setItem('hide1', 1);
+                jq();
+                document.title = 'Gallery';
+                $('.images').show();
+                $('.reload').show();
+                if (big == 1) {
+                    $('#image-viewer').show();
+                }
+                if (aaudio == 1) {
+                    audio.play();
+                }
             }
-            if (aaudio == 1) {
-                audio.play();
-            }
-        }
-    } else if (key == 222||key == 111) {
-        */
-        if ($('.images').is(":hidden") && document.querySelector("body > iframe") == null) {
-            localStorage.setItem('hide', 1);
-            document.title = 'Gallery';
-            $('.images').show();
-            $('.reload').show();
-            if (big == 1) {
-                $('#image-viewer').show();
+        } else if (key == 222||key == 111) {
+            */
+    if ($('.images').is(":hidden") && document.querySelector("body > iframe") == null) {
+        localStorage.setItem('hide', 1);
+        document.title = 'Gallery';
+        $('.images').show();
+        $('.reload').show();
+        if (big == 1) {
+            $('#image-viewer').show();
 
-            }
-            if (aaudio == 1) {
-                audio.play();
-            }
         }
+        if (aaudio == 1) {
+            audio.play();
+        }
+    }
     //}
 
 
@@ -1281,10 +1291,10 @@ function hold() {
         if (big == 1) {
             tmpbig = $("#full-image").attr("src");
             var holdl = JSON.parse(localStorage.holdl);
-            holdl.push({"tmpbig": tmpbig});
+            holdl.push({ "tmpbig": tmpbig });
             localStorage.setItem('holdl', JSON.stringify(holdl));
             var holdlself = JSON.parse(localStorage.holdlself);
-            holdlself.push({"tmpbig": tmpbig});
+            holdlself.push({ "tmpbig": tmpbig });
             localStorage.setItem('holdlself', JSON.stringify(holdlself));
             if (navigator.onLine) addouthold();
             // tmpbig = $("#full-image").attr("src"); localStorage.setItem('tmpbig', tmpbig);
@@ -1300,7 +1310,7 @@ function hold() {
             // if (navigator.onLine) addouthold();
         }
         else {
-snackbar("No image to hold");
+            snackbar("No image to hold");
 
             // var holdl = JSON.parse(localStorage.holdl);
             // holdl.push({ "tmp": tmp, "cbig": big.toString() });
@@ -1331,9 +1341,9 @@ function holdc() {
 
 }
 function unholdc() {
-    if(big==1){
-    $("#full-image").attr("num",  (DATA.indexOf(localStorage.getItem('tmpbigc'))) );
-    $("#full-image").attr("src", localStorage.getItem('tmpbigc'));
+    if (big == 1) {
+        $("#full-image").attr("num", (DATA.indexOf(localStorage.getItem('tmpbigc'))));
+        $("#full-image").attr("src", localStorage.getItem('tmpbigc'));
     }
     // //hi == undefined;
     // hc = true;
@@ -1417,16 +1427,16 @@ function unholdl() {
         //return;
     }
     else {
-        if(big==1){
-        var holdlist = JSON.parse(localStorage.getItem('holdl'));
-        if (typeof hi == 'undefined' || hi == -1 || hc) { hi = holdlist.length - 1; hc = false; }
-        if (!unholdf) { holdc(); unholdf = true; }
-        $("#full-image").attr("src", holdlist[hi].tmpbig);
-        //(DATA.includes(holdlist[hi].tmpbig))
-        $("#full-image").attr("num", ((DATA.indexOf(holdlist[hi].tmpbig)) ));
-        
-        hi--;
-    }
+        if (big == 1) {
+            var holdlist = JSON.parse(localStorage.getItem('holdl'));
+            if (typeof hi == 'undefined' || hi == -1 || hc) { hi = holdlist.length - 1; hc = false; }
+            if (!unholdf) { holdc(); unholdf = true; }
+            $("#full-image").attr("src", holdlist[hi].tmpbig);
+            //(DATA.includes(holdlist[hi].tmpbig))
+            $("#full-image").attr("num", ((DATA.indexOf(holdlist[hi].tmpbig))));
+
+            hi--;
+        }
 
 
         // var holdlist = JSON.parse(localStorage.getItem('holdl'));
@@ -1473,7 +1483,7 @@ function unholdl() {
 const panner = () => {
     panelem = document.querySelector("#full-image");
 
-    panzoom = Panzoom(panelem, { canvas: true, zoomSpeed: 5, panOnlyWhenZoomed: true, minScale: 1.0 ,contain:true});
+    panzoom = Panzoom(panelem, { canvas: true, zoomSpeed: 5, panOnlyWhenZoomed: true, minScale: 1.0, contain: true });
     parent = panelem.parentElement;
     // No function bind needed
     //parent.addEventListener('wheel', panzoom.zoomWithWheel)
