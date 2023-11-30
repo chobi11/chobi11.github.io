@@ -1,6 +1,6 @@
 var link = (new URL(document.URL)).hostname;
 var dlist = [];
-var rlist = [];
+var blob_list = [];
 var r1 = -1;
 var r2 = -1;
 var web =link.includes('github');
