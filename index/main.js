@@ -916,7 +916,7 @@ function phnopt() {
         (eHelp = document.createElement("DIV")).id = "iks_help";
         eHelp.innerHTML = `<style>
         #iks_help{position:fixed;z-index:999999999;left:0;top:0;right:0;bottom:0;background:rgb(0,0,0,0.5);cursor:pointer;display: flex;align-items: center;}
-        .webrotate{border: 2px solid #beaeae;padding: 1em;}
+        .subopt{border: 2px solid #beaeae;padding: .8em;}
         #help{    position: fixed;
     /* right: 0.5em;
     /* bottom: 0.5em; 
@@ -954,19 +954,19 @@ function phnopt() {
         <table id="iks_list">
         <tr><td><div><a onclick="if(localStorage.getItem('hider')=='off'){localStorage.setItem('hider','on');
     hider();}else{localStorage.setItem('hider','off');}">hider `+ localStorage.getItem('hider') + `</a></div></td></tr>
-        <tr><td><div><a class="webrotate"  onclick="hold();hidephnopt();">hold</a>&nbsp;&nbsp;
-        <a class="webrotate"  onclick="unholdl();hidephnopt();">unhold list</a>&nbsp;&nbsp;`
-        + ((unholdf) ? `<a class="webrotate"  onclick="unholdc();hidephnopt();">undo</a>` : '')+
+        <tr><td><div><a class="subopt"  onclick="hold();hidephnopt();">hold</a>&nbsp;&nbsp;
+        <a class="subopt"  onclick="unholdl();hidephnopt();">unhold list</a>&nbsp;&nbsp;`
+        + ((unholdf) ? `<a class="subopt"  onclick="unholdc();hidephnopt();">undo</a>` : '')+
         
         `</div></td></tr><tr><td><div>`
-        + ((localStorage.getItem("col") != 1) ? `<a class="webrotate"  onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
-            + ((localStorage.getItem("col") != 2) ? `<a class="webrotate"  onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
-            + ((localStorage.getItem("col") != 3) ? `<a class="webrotate"  onclick="ds('f');hidephnopt();">foreign</a>` : '')
+        + ((localStorage.getItem("col") != 1) ? `<a class="subopt"  onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
+            + ((localStorage.getItem("col") != 2) ? `<a class="subopt"  onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
+            + ((localStorage.getItem("col") != 3) ? `<a class="subopt"  onclick="ds('f');hidephnopt();">foreign</a>` : '')
 +`</div></td></tr>`
 
-            + ((big == 1) ? ((web) ? '<tr><td><div><a class="webrotate" onclick="rotateout(90);hidephnopt();">rotate x1</a> &nbsp;&nbsp;<a class="webrotate"  onclick="rotateout(180);hidephnopt();">rotate x2</a>&nbsp;&nbsp;<a class="webrotate"  onclick="rotateout(270);hidephnopt();">rotate x3</a></div></td></tr>'
-                : '<tr><td><div><a class="webrotate" onclick="rotate(90);hidephnopt();">rotate x1</a> &nbsp;&nbsp;<a class="webrotate"  onclick="rotate(180);hidephnopt();">rotate x2</a>&nbsp;&nbsp;<a class="webrotate"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>') : '')
-            + ((big == 1) ?`<tr><td><div><a class="webrotate" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="webrotate"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a></div></td></tr>`:``)
+            + ((big == 1) ? ((web) ? '<tr><td><div><a class="subopt" onclick="rotateout(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotateout(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotateout(270);hidephnopt();">rotate x3</a></div></td></tr>'
+                : '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>') : '')
+            + ((big == 1) ?`<tr><td><div><a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="subopt"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a></div></td></tr>`:``)
             +
             `</table>
         
