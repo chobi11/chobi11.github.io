@@ -651,6 +651,9 @@ var close_cropedit = () => {
     var ttt = "?t=" + new Date().getTime();
     var ssr = timeremove(DATA[anum]);
     DATA[anum] = (web) ? URL.createObjectURL(croppedImage) : ssr + ttt;
+    if(cropeditval.blob_url!=''){
+        track_blob(cropeditval.blob_url, DATA[anum]);
+    }
     document.querySelector("#full-image").src = DATA[anum];
 }
 function fullscreen() {

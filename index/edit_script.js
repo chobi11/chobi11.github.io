@@ -58,14 +58,18 @@ function updateFile(path, updatedBlob) {
   _cl = ABOUtils.Debug.log2;
 
 
+  var imagesrc = parent.cropeditval.val;//localStorage.getItem("crop");
+  var imagebloburl = parent.cropeditval.blob_url;//localStorage.getItem("crop");
+  //console.log(imagesrc);
+  var src = (imagesrc==imagebloburl&&parent.web)?imagesrc:imagebloburl;
   //Global state model. Can be changed from within Vue or from the outside.
   const _svgState = {
     img: {
       //url: '..test/test3.jpg',
-      url: parent.cropeditval.val,
+      url: src,
       //filename: 'test.jpg',
       //size: [600, 1200],
-      size: [parent.cropeditval.width, parent.cropeditval.height],
+      size: [src.width, src.height],
       pos: [0, 0],
       rot: 0 },
 
