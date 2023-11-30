@@ -1,4 +1,3 @@
-
 tmpDATA = DATA;
 
 const cout = (a) => {
@@ -617,7 +616,7 @@ var cropeditfunc = (a) => {
             }
             console.log(ssr);
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + timeremove(DATA[anum])), web: web, phone: phone,blob_url:DATA[anum] } : { val: ((web) ? ssr : '.' + timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone,blob_url:DATA[anum] };
+            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + DATA[anum]), web: web, phone: phone,blob_url:DATA[anum] } : { val: ((web) ? ssr : '.' + DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone,blob_url:DATA[anum] };
             var ifrm = document.createElement("iframe");
             console.log((((new URL(document.URL)).hostname.includes('localhost') ? "http://localhost:5656/index/" : (new URL(document.URL)).hostname + "/index/")) + a + ".html");
             ifrm.setAttribute("src", ((document.URL.includes('5656') ? "http://" + (new URL(document.URL)).hostname + ":5656/index/" : 'https://' + (new URL(document.URL)).hostname + "/index/")) + a + ".html");

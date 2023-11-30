@@ -1,3 +1,4 @@
+
 (function () {
   var gitlink='https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
 const token = localStorage.getItem('token');
@@ -488,11 +489,15 @@ src = imagesrc;
           var formData = new FormData();
 
           formData.append('croppedImage', e);
-          
-          
-          formData.append('src', parent.cropeditval.val.replace('..', ''));
-          formData.append('form_key', window.FORM_KEY);
           var imagesrc = parent.cropeditval.val;
+          if (imagesrc.includes('?t=')) {
+            imagesrc = imagesrc.replace('?t=', ':');
+            imagesrc = /(.+):/.exec(imagesrc)[1];
+        }
+          
+          formData.append('src', imagesrc.replace('..', ''));
+          formData.append('form_key', window.FORM_KEY);
+          
           if(parent.web){
           path = imagesrc.replace(gitlink, '');
           parent.croppedImage = e;
@@ -583,5 +588,6 @@ else{
 
 */
   window.addEventListener('load', init);
+
 
 })();
