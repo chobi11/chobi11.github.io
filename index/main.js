@@ -597,6 +597,7 @@ function idleTimerFunc() {
         cout("idle timer " + localStorage.getItem('idle'));
     }
 }
+console.log(localStorage.getItem('idle'));
 var cropeditfunc = (a) => {
 
     playstop();
@@ -614,8 +615,9 @@ var cropeditfunc = (a) => {
             else {
                 ssr = src;
             }
+            console.log(ssr);
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? { val: ((web) ? src : '.' + timeremove(DATA[anum])), web: web, phone: phone,blob_url:DATA[anum] } : { val: ((web) ? timeremove(DATA[anum]) : '.' + timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone };
+            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + timeremove(DATA[anum])), web: web, phone: phone,blob_url:DATA[anum] } : { val: ((web) ? timeremove(DATA[anum]) : '.' + timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone };
             var ifrm = document.createElement("iframe");
             console.log((((new URL(document.URL)).hostname.includes('localhost') ? "http://localhost:5656/index/" : (new URL(document.URL)).hostname + "/index/")) + a + ".html");
             ifrm.setAttribute("src", ((document.URL.includes('5656') ? "http://" + (new URL(document.URL)).hostname + ":5656/index/" : 'https://' + (new URL(document.URL)).hostname + "/index/")) + a + ".html");
