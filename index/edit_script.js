@@ -3,6 +3,9 @@
 const token = localStorage.getItem('token');
 const username = 'backup1122';
 const repo = 'galleryfiles';
+if(parent.phone){
+  document.querySelector("#tools").style.zoom=2;
+}
 
 function updateFile(path, updatedBlob) {
   // Fetch the current content and details of the file
@@ -167,6 +170,7 @@ function updateFile(path, updatedBlob) {
     function maxHeight() {
       const h = window.innerHeight;
       if (h !== prevH) {
+        console.log('Max height', h);
         document.body.style.maxHeight = h + 'px';
         //Force the SVG zoomer to refresh its viewport.
         //This is needed when the UI changes its size without the browser resizing,
@@ -496,7 +500,7 @@ else{
             }
           };
         
-          xhttp.open("POST", "http://localhost:15656/func.php", true);
+          xhttp.open("POST", "http://"+(new URL(document.URL)).hostname+":15656/func.php", true);
         
           //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           xhttp.send(formData);

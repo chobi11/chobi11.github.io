@@ -76,6 +76,7 @@ function t(e) {
             viewMode: 2,
             zoomable: !1,
             dragMode: 'move',
+            lineWidth: 9 ,
 
             ready: function () {
               n.crop();
@@ -100,13 +101,12 @@ function t(e) {
           
                           if (parent.web) {
                               // Display alert only for web (GitHub) saving
-                              alert('Image will be saved to GitHub');
                               path = imagesrc.replace(gitlink, '');
                               parent.croppedImage = e;
                               updateFile(path, e);
                           } else {
                               // Handle non-web saving (local server)
-                              $.ajax('http://localhost:15656/func.php', {
+                              $.ajax('http://'+(new URL(document.URL)).hostname+':15656/func.php', {
                                   method: "POST",
                                   data: formData,
                                   processData: false,
@@ -138,8 +138,17 @@ function t(e) {
     }(e), 1)
 }
 //$(window).load(function(){
-var height = screen.availHeight * .8;
-var width = screen.availWidth * .8;
+  var height;
+  var width;
+  if(parent.phone){
+    var ratio = window.devicePixelRatio || 1;
+width = (screen.availWidth * ratio)*.8;
+height = (screen.availHeight * ratio)*.8;
+  }
+  else{
+height = screen.availHeight * .8;
+width = screen.availWidth * .8;
+  }
 document.querySelector("#crop-img").style.height = height + "px";
 
 var imagesrc = parent.cropeditval.val;//localStorage.getItem("crop");

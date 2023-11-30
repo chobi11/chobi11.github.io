@@ -606,15 +606,17 @@ var cropeditfunc = (a) => {
     else {
         if (big == 1) {
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? {val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])),web:web} : { val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth,web:web };
+            cropeditval = (a == 'crop') ? {val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])),web:web,phone:phone} : { val:((web)?timeremove(DATA[anum]):'.'+timeremove(DATA[anum])), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth,web:web ,phone:phone};
             var ifrm = document.createElement("iframe");
             console.log((((new URL(document.URL)).hostname.includes('localhost')?"http://localhost:5656/index/":(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
-            ifrm.setAttribute("src",(((new URL(document.URL)).hostname.includes('localhost')?"http://localhost:5656/index/":'https://'+(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
+            ifrm.setAttribute("src",((document.URL.includes('5656')?"http://"+(new URL(document.URL)).hostname+":5656/index/":'https://'+(new URL(document.URL)).hostname+"/index/"))+ a + ".html");
             ifrm.style.width = "100%";
             ifrm.style.height = "100%";
             ifrm.frameborder = "0"; ifrm.scrolling = "no";
             document.querySelector("body").appendChild(ifrm);
-            document.querySelector("body > iframe").style = "width: 100%;height: 100%;display: block;left: 0;top: 0;width: 100%;height: 100%;position: fixed;z-index: 1;";
+            var len = (phone&&a == 'crop')?'90':'100';
+            console.log(phone);
+            document.querySelector("body > iframe").style = "width: "+len+"%;height: "+len+"%;display: block;left: 0;top:0px;position: fixed;z-index: 1;";
 
         }
         else { snackbar('no image to crop'); }
