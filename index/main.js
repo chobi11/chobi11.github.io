@@ -596,7 +596,7 @@ function idleTimerFunc() {
         cout("idle timer " + localStorage.getItem('idle'));
     }
 }
-console.log(localStorage.getItem('idle'));
+//console.log(localStorage.getItem('idle'));
 var cropeditfunc = (a) => {
 
     playstop();
@@ -922,6 +922,17 @@ function togglehider() {
     }
 }
 
+function resetToken() {
+    var userInput = prompt("Please enter token:");
+
+if (userInput !== null && userInput !== "") {
+    localStorage.setItem('token',userInput);
+  snackbar('Token set');
+} else {
+  snackbar('no input');
+}
+}
+
 function phnopt() {
 
     var h = localStorage.getItem('hider');
@@ -981,6 +992,9 @@ function phnopt() {
             + ((big == 1) ? ((web) ? '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>'
                 : '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>') : '')
             + ((big == 1) ? `<tr><td><div><a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="subopt"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a></div></td></tr>` : ``)
+            +
+            
+            ((web) ? `<tr><td><div><a onclick="resetToken();hidephnopt();">Reset token</a></div></td></tr>`:``)
             +
             `</table>
         
