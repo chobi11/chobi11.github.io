@@ -18,7 +18,7 @@ function UnDelete() {
   }
   if (web) {
     cout("on web");
-    addoutdir();
+    UnDeleteWeb();
     return;
   }
   var nowsame = 0;
