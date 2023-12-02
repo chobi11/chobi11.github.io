@@ -7,6 +7,7 @@ var gitlink = 'https://raw.githubusercontent.com/backup1122/galleryfiles/master/
 const token = localStorage.getItem('token');
 const username = 'backup1122';
 const repo = 'galleryfiles';
+var dblist = [];
 
 function deleteFile(path) {
   // Fetch the current content and details of the file
@@ -169,6 +170,7 @@ var addoutdir = () => {
       leftl();
       //console.log('else')
     }
+    
     if (nowsame == 1) {
       document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
       //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
@@ -185,6 +187,23 @@ var addoutdir = () => {
 
     path = ssr.replace(gitlink, '');
     deleteFile(path);
+    
+
+// Fetch the image as a Blob
+fetch(ssr)
+  .then(response => response.blob())
+  .then(blob => {
+    console.log(blob);
+
+    const blobUrl = URL.createObjectURL(blob);
+    console.log('Blob URL:', blobUrl);
+      var b={src:ssr,blob:blob,blob_url:blobUrl,num:anum,now: now}
+      dblist.push(b);
+
+  })
+  .catch(error => {
+    console.error('Error fetching image:', error);
+  });
     /*var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
       if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {

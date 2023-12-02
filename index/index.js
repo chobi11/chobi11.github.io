@@ -3,7 +3,7 @@ var dlist = [];
 var blob_list = [];
 var r1 = -1;
 var r2 = -1;
-var web =link.includes('github');
+var web = link.includes('github');
 if (typeof DATA == 'undefined') {
   refresh(1);
 }
@@ -100,6 +100,101 @@ function UnDelete() {
   }
 }
 
+function UnDeleteWeb() {
+  if (dblist.length == 0) {
+    snackbar("Nothing to undelete");
+    return;
+  }
+  var nowsame = 0;
+  if (fulls == 1 && phone) {
+    fullscreen();
+  }
+  if (confirm("Sure you want to restore?")) {
+    cout('y');
+    var kkk = dblist.pop();
+    var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
+    var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
+
+    DATA.insert(kkk.num, kkk.src);
+    var mainimages = document.querySelector("body > div.images").childNodes;
+
+    for (var i = 1; i < mainimages.length; i++) {
+      if (parseInt(mainimages[i].getAttribute('num')) >= kkk.num) {
+        mainimages[i].setAttribute('num', (parseInt(mainimages[i].getAttribute('num')) + 1));
+
+      }
+    }
+
+    if (lshift && leftRightTrack == 0) {
+      document.querySelector("#full-image").src = DATA[kkk.num];
+      leftRightTrack = 0;
+    }
+    if (rshift && leftRightTrack == 1) {
+      document.querySelector("#full-image").src = DATA[kkk.num];
+      if (kkk.now == now) {
+        document.querySelector("#full-image").setAttribute("num", parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
+      }
+      leftRightTrack = 1;
+    }
+    upload(kkk.src,kkk.blob);
+    //if (this.responseText == "done") {
+      
+    //}
+
+  }
+  else {
+    cout('n');
+  }
+}
+
+var upload=(path,blob)=>
+{
+fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`, {
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+  .then(response => response.json())
+  .then(data => {
+    const latestCommitSha = data.object.sha;
+
+    // Step 3: Create a Blob
+
+    // Step 4: Read the Blob
+    const reader = new FileReader();
+    reader.onload = function () {
+      const fileContentBase64 = btoa(reader.result);
+
+      // Step 5: Upload the File
+      fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+        method: 'PUT', // or 'POST' for creating a new file
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'Upload file via API',
+          content: fileContentBase64,
+          sha: latestCommitSha,
+          branch: branch,
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('File uploaded successfully:', data);
+        })
+        .catch(error => {
+          console.error('Error uploading file:', error);
+        });
+    };
+
+    reader.readAsBinaryString(blob);
+  })
+  .catch(error => {
+    console.error('Error getting latest commit sha:', error);
+  });
+}
 function Delete() {
   if (web) {
     cout("on web");
@@ -110,78 +205,79 @@ function Delete() {
   if (fulls == 1 && phone) {
     fullscreen();
   }
-  var sure=(phone)?confirm("Are you sure"):true;
-  
-   if (sure) {
-  //   cout('y');
-  var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
-  var ssr = DATA[anum];
-  cout(ssr);
-  if (ssr.includes('?t=')) {
-    ssr = ssr.replace('?t=', ':');
-    ssr = /(.+):/.exec(ssr)[1];
-  }
-  if (document.querySelector("#full-image").src == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
-    nowsame = 1;//not changed
-  }
-  else {
-    nowsame = 0;//changed
-  }
-  cout(nowsame);
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      //document.querySelector("body > script:nth-child(13)").innerHTML = this.responseText;
-      snackbar(this.responseText);
-      if (this.responseText == "Deleted") {
-        //var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
-        dlist.push({ num: anum, src: DATA[anum], now: now });
-        DATA.splice(anum, 1);
-        if (leftRightTrack == 0) {
-          document.querySelector("#full-image").src = DATA[anum];
-          //console.log('if');
-        }
-        else {
-          leftl();
-          //console.log('else')
-        }
-        if (nowsame == 1) {
-          document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
-          //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
-        }
-        var mainimages = document.querySelector("body > div.images").childNodes;
-        // if (document.querySelector("#full-image").getAttribute('num') < document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) {//num sync after delete image for re clicking
-        //   document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
-        // }
-        for (var i = 1; i < mainimages.length; i++) {
-          if (mainimages[i].getAttribute('num') > anum) {
-            mainimages[i].setAttribute('num', (parseInt(mainimages[i].getAttribute('num')) - 1));
-          }
-        }
-        var i = (localStorage.delc != undefined) ? parseInt(localStorage.delc) : 0;
-        if (i >= 50) {
-          localStorage.delc = 0;
-          if (confirm("too much deletes want to resync?")) {
-          refresh();}
-        }
-        else {
-          i++;
-          localStorage.delc = i;
-        }
-        //rightl();
-      }
+  var sure = (phone) ? confirm("Are you sure") : true;
+
+  if (sure) {
+    //   cout('y');
+    var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
+    var ssr = DATA[anum];
+    cout(ssr);
+    if (ssr.includes('?t=')) {
+      ssr = ssr.replace('?t=', ':');
+      ssr = /(.+):/.exec(ssr)[1];
+    }
+    if (document.querySelector("#full-image").src == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
+      nowsame = 1;//not changed
     }
     else {
-      //cout('error');
+      nowsame = 0;//changed
     }
-  };
+    cout(nowsame);
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
+        //document.querySelector("body > script:nth-child(13)").innerHTML = this.responseText;
+        snackbar(this.responseText);
+        if (this.responseText == "Deleted") {
+          //var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
+          dlist.push({ num: anum, src: DATA[anum], now: now });
+          DATA.splice(anum, 1);
+          if (leftRightTrack == 0) {
+            document.querySelector("#full-image").src = DATA[anum];
+            //console.log('if');
+          }
+          else {
+            leftl();
+            //console.log('else')
+          }
+          if (nowsame == 1) {
+            document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
+            //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
+          }
+          var mainimages = document.querySelector("body > div.images").childNodes;
+          // if (document.querySelector("#full-image").getAttribute('num') < document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) {//num sync after delete image for re clicking
+          //   document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
+          // }
+          for (var i = 1; i < mainimages.length; i++) {
+            if (mainimages[i].getAttribute('num') > anum) {
+              mainimages[i].setAttribute('num', (parseInt(mainimages[i].getAttribute('num')) - 1));
+            }
+          }
+          var i = (localStorage.delc != undefined) ? parseInt(localStorage.delc) : 0;
+          if (i >= 50) {
+            localStorage.delc = 0;
+            if (confirm("too much deletes want to resync?")) {
+              refresh();
+            }
+          }
+          else {
+            i++;
+            localStorage.delc = i;
+          }
+          //rightl();
+        }
+      }
+      else {
+        //cout('error');
+      }
+    };
 
-  xhttp.open("POST", "http://" + link + ":15656/func.php", true);
+    xhttp.open("POST", "http://" + link + ":15656/func.php", true);
 
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("ddir=" + ssr);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("ddir=" + ssr);
 
-   }
+  }
   // else {
   //   cout('n');
   // }
@@ -189,7 +285,7 @@ function Delete() {
 
 
 
-function rotate(deg=90) {
+function rotate(deg = 90) {
 
   playstop();
   if (web) {
@@ -237,7 +333,7 @@ function rotate(deg=90) {
   xhttp.open("POST", "http://" + link + ":15656/func.php", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   //send rdir and deg
-  xhttp.send("rdir=" + ssr+"&deg="+deg);
+  xhttp.send("rdir=" + ssr + "&deg=" + deg);
 }
 
 
