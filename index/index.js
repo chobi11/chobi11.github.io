@@ -150,6 +150,7 @@ function UnDeleteWeb() {
 
 var upload=(path,blob)=>
 {
+  branch='master';
 fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`, {
   method: 'GET',
   headers: {
