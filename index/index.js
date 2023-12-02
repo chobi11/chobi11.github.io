@@ -12,13 +12,14 @@ Array.prototype.insert = function (index, ...items) {
 };
 
 function UnDelete() {
-  if (dlist.length == 0) {
-    snackbar("Nothing to undelete");
-    return;
-  }
+  
   if (web) {
     cout("on web");
     UnDeleteWeb();
+    return;
+  }
+  if (dlist.length == 0) {
+    snackbar("Nothing to undelete");
     return;
   }
   var nowsame = 0;
@@ -183,6 +184,12 @@ fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`
         .then(response => response.json())
         .then(data => {
           console.log('File uploaded successfully:', data);
+          snackbar("Restored");
+      var i = parseInt(localStorage.delc);
+      if (i >= 1) {
+        i--;
+        localStorage.delc = i;
+      }
         })
         .catch(error => {
           console.error('Error uploading file:', error);
