@@ -116,7 +116,7 @@ function UnDeleteWeb() {
     var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
     var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
 
-    DATA.insert(kkk.num, kkk.src);
+    DATA.insert(kkk.num, kkk.blob_url);
     var mainimages = document.querySelector("body > div.images").childNodes;
 
     for (var i = 1; i < mainimages.length; i++) {
