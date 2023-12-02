@@ -137,7 +137,7 @@ function UnDeleteWeb() {
       }
       leftRightTrack = 1;
     }
-    upload(kkk.src,kkk.blob);
+    upload(kkk.src.replace(gitlink,''),kkk.blob);
     //if (this.responseText == "done") {
       
     //}
