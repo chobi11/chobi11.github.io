@@ -10,7 +10,15 @@ if (typeof DATA == 'undefined') {
 Array.prototype.insert = function (index, ...items) {
   this.splice(index, 0, ...items);
 };
-
+var getlblob = (d) => {
+  //var d='https://raw.githubusercontent.com/backup1122/galleryfiles/master/f/r/19/1774.jpg';
+var f=0;
+blob_list.forEach((ii)=>{
+    if(ii.dir==d){
+        d=ii.ndir;
+    }
+});
+return d;}
 function UnDelete() {
   
   if (web) {
@@ -38,7 +46,7 @@ function UnDelete() {
         var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
         var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
 
-        DATA.insert(kkk.num, kkk.src);
+        DATA.insert(kkk.num, kkk.blob_url);
         var mainimages = document.querySelector("body > div.images").childNodes;
 
         // if (parseInt(document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) <= kkk.num) {
