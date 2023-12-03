@@ -113,6 +113,7 @@ function UnDeleteWeb() {
   if (confirm("Sure you want to restore?")) {
     cout('y');
     var kkk = dblist.pop();
+    console.log(kkk.blob_url);
     var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
     var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
     track_blob(kkk.src, kkk.blob_url);
