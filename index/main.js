@@ -993,11 +993,7 @@ function phnopt() {
     }
     @media only screen and (min-height: 250px) 
 
-{
-#iks_list div {
-    font-size: 2em;
-    line-height: 3.5em;
-}
+    {
 }
         </style>
         <div id="help">
