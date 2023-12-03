@@ -10,15 +10,7 @@ if (typeof DATA == 'undefined') {
 Array.prototype.insert = function (index, ...items) {
   this.splice(index, 0, ...items);
 };
-var getlblob = (d) => {
-  //var d='https://raw.githubusercontent.com/backup1122/galleryfiles/master/f/r/19/1774.jpg';
-var f=0;
-blob_list.forEach((ii)=>{
-    if(ii.dir==d){
-        d=ii.ndir;
-    }
-});
-return d;}
+
 function UnDelete() {
   
   if (web) {
@@ -121,14 +113,10 @@ function UnDeleteWeb() {
   if (confirm("Sure you want to restore?")) {
     cout('y');
     var kkk = dblist.pop();
-    console.log(kkk.blob_url);
     var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
     var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
-    update_blob(kkk.src, kkk.blob_url);
-    //DATA.insert(kkk.num, kkk.blob_url);
-    console.log(kkk.src);
-    DATA.insert(kkk.num, get_src2blob(kkk.src));
-    console.log(get_src2blob(kkk.src));
+    track_blob(kkk.src, kkk.blob_url);
+    DATA.insert(kkk.num, kkk.blob_url);
     var mainimages = document.querySelector("body > div.images").childNodes;
 
     for (var i = 1; i < mainimages.length; i++) {
