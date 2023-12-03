@@ -120,7 +120,7 @@ var track_blob = (dd, ndd) => {
       f = 1;
       obj.ndir = ndd;
       dblist.forEach(function (obj2) {
-        if (obj2.blob_url === dd) {
+        if (obj2.src === dd) {
           obj2.blob_url = ndd;
         }
       });
