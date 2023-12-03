@@ -3,7 +3,7 @@ var dlist = [];
 var blob_list = [];
 var r1 = -1;
 var r2 = -1;
-var web = true;//link.includes('github');
+var web = link.includes('github');
 if (typeof DATA == 'undefined') {
   refresh(1);
 }
