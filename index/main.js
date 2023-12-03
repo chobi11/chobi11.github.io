@@ -995,8 +995,8 @@ function phnopt() {
 
 {
 #iks_list div {
-    font-size: 2em;
-    line-height: 2.5em;
+    font-size: 1.5em;
+    line-height: 1.8em;
 }
 }
         </style>
