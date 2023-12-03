@@ -119,11 +119,22 @@ var track_blob = (dd, ndd) => {
     if (obj.ndir === dd) {
       f = 1;
       obj.ndir = ndd;
-      dblist.forEach(function (obj2) {
-        if (obj2.src === dd) {
-          obj2.blob_url = ndd;
-        }
-      });
+      
+    }
+  });
+  if (f == 0) {
+    //console.log(44);
+    blob_list.push({ ndir: ndd, dir: dd });
+  }
+  console.log(blob_list);
+}
+var update_blob = (dd, ndd) => {
+  var f = 0;
+  blob_list.forEach(function (obj) {
+    if (obj.dir === dd) {
+      f = 1;
+      obj.ndir = ndd;
+      
     }
   });
   if (f == 0) {
@@ -204,7 +215,7 @@ fetch(ssr)
     console.log('Blob URL:', blobUrl);
       var b={src:ssr,blob:blob,blob_url:blobUrl,num:anum,now: now}
       dblist.push(b);
-      track_blob(ssr, blobUrl);
+      update_blob(ssr, blobUrl);
 
   })
   .catch(error => {
