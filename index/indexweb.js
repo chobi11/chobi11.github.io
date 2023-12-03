@@ -119,6 +119,11 @@ var track_blob = (dd, ndd) => {
     if (obj.ndir === dd) {
       f = 1;
       obj.ndir = ndd;
+      dblist.forEach(function (obj2) {
+        if (obj2.blob_url === dd) {
+          obj2.blob_url = ndd;
+        }
+      });
     }
   });
   if (f == 0) {
