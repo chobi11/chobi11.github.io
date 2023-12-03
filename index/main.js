@@ -958,7 +958,8 @@ function phnopt() {
         (eHelp = document.createElement("DIV")).id = "iks_help";
         eHelp.innerHTML = `<style>
         #iks_help{position:fixed;z-index:999999999;left:0;top:0;right:0;bottom:0;background:rgb(0,0,0,0.5);cursor:pointer;display: flex;align-items: center;}
-        .subopt{border: 2px solid #beaeae;padding: .8em;}
+        .subopt{border: 2px solid #beaeae;padding: .8em;
+        }
         #help{    position: fixed;
     /* right: 0.5em;
     /* bottom: 0.5em; 
@@ -991,13 +992,8 @@ function phnopt() {
             line-height: 1.5em;
 }
     }
-    @media only screen and (min-height: 250px) 
-
-{
-#iks_list div {
-    font-size: 2em;
-}
-}
+    
+    
         </style>
         <div id="help">
         <table id="iks_list">
