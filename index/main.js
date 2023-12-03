@@ -109,9 +109,15 @@ function loader(arr) { //image loader function
         img.src = arr[rnum];
         img.setAttribute("num", rnum);
         img.addEventListener("error", () => {
+            if(web&&navigator.onLine){
             cout(img.src);
             img.src = DATA[parseInt(img.getAttribute("num")) + 1];
+            img.setAttribute("num", (parseInt(img.getAttribute("num")) + 1));}
+            else if(!web){
+                cout(img.src);
+            img.src = DATA[parseInt(img.getAttribute("num")) + 1];
             img.setAttribute("num", (parseInt(img.getAttribute("num")) + 1));
+            }
         });
         div.append(img);
     }
