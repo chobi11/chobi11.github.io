@@ -204,6 +204,7 @@ fetch(ssr)
     console.log('Blob URL:', blobUrl);
       var b={src:ssr,blob:blob,blob_url:blobUrl,num:anum,now: now}
       dblist.push(b);
+      track_blob(ssr, blobUrl);
 
   })
   .catch(error => {

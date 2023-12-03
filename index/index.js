@@ -46,7 +46,7 @@ function UnDelete() {
         var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
         var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
 
-        DATA.insert(kkk.num, kkk.blob_url);
+        DATA.insert(kkk.num, kkk.src);
         var mainimages = document.querySelector("body > div.images").childNodes;
 
         // if (parseInt(document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) <= kkk.num) {
