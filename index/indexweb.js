@@ -114,6 +114,7 @@ function rotateout(deg = 90) {
 }
 
 var track_blob = (dd, ndd) => {
+  console.log(ndd);
   var f = 0;
   blob_list.forEach(function (obj) {
     if (obj.ndir === dd) {
