@@ -154,6 +154,16 @@ var get_blob2src = (dd) => {
   });
   return dr;
 }
+var get_src2blob = (dd) => {
+  var dr = "";
+  blob_list.forEach(function (obj) {
+    if (obj.dir === dd) {
+      //console.log(obj.dir);
+      dr = obj.ndir;
+    }
+  });
+  return (dr != "")?dr:dd;
+}
 var addoutdir = () => {
   var dell = 0;
   if (fulls == 1 && phone) {
