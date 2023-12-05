@@ -142,12 +142,115 @@ var get_blob2src = (dd) => {
   });
   return dr;
 }
-var addoutdir = () => {
+
+function UnDeleteWeb() {
+  if (dblist.length == 0) {
+    snackbar("Nothing to undelete");
+    return;
+  }
+  var nowsame = 0;
+  if (fulls == 1 && phone) {
+    fullscreen();
+  }
+  if (confirm("Sure you want to restore?")) {
+    cout('y');
+    var kkk = dblist.pop();
+    var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
+    var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
+    //track_blob(kkk.src, kkk.blob_url);
+    DATA.insert(kkk.num, kkk.blob_url);
+    var mainimages = document.querySelector("body > div.images").childNodes;
+
+    for (var i = 1; i < mainimages.length; i++) {
+      if (parseInt(mainimages[i].getAttribute('num')) >= kkk.num) {
+        mainimages[i].setAttribute('num', (parseInt(mainimages[i].getAttribute('num')) + 1));
+
+      }
+    }
+
+    if (lshift && leftRightTrack == 0) {
+      document.querySelector("#full-image").src = DATA[kkk.num];
+      leftRightTrack = 0;
+    }
+    if (rshift && leftRightTrack == 1) {
+      document.querySelector("#full-image").src = DATA[kkk.num];
+      if (kkk.now == now) {
+        document.querySelector("#full-image").setAttribute("num", parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
+      }
+      leftRightTrack = 1;
+    }
+    upload(kkk.src.replace(gitlink,''),kkk.blob);
+    //if (this.responseText == "done") {
+      
+    //}
+
+  }
+  else {
+    cout('n');
+  }
+}
+
+var upload=(path,blob)=>
+{
+  branch='master';
+fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`, {
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+})
+  .then(response => response.json())
+  .then(data => {
+    const latestCommitSha = data.object.sha;
+
+    // Step 3: Create a Blob
+
+    // Step 4: Read the Blob
+    const reader = new FileReader();
+    reader.onload = function () {
+      const fileContentBase64 = btoa(reader.result);
+
+      // Step 5: Upload the File
+      fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+        method: 'PUT', // or 'POST' for creating a new file
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'Upload file via API',
+          content: fileContentBase64,
+          sha: latestCommitSha,
+          branch: branch,
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('File uploaded successfully:', data);
+          snackbar("Restored");
+      var i = parseInt(localStorage.delc);
+      if (i >= 1) {
+        i--;
+        localStorage.delc = i;
+      }
+        })
+        .catch(error => {
+          console.error('Error uploading file:', error);
+        });
+    };
+
+    reader.readAsBinaryString(blob);
+  })
+  .catch(error => {
+    console.error('Error getting latest commit sha:', error);
+  });
+}
+var DeleteWeb = () => {
   var dell = 0;
   if (fulls == 1 && phone) {
     fullscreen();
   }
-  if (confirm("Are you sure")) {
+  //if (confirm("Are you sure")) {
     cout('y');
     var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
     var ssr = DATA[anum];
@@ -231,10 +334,10 @@ fetch(ssr)
     xhttp.setRequestHeader("Content-type", "application/json");
 
     xhttp.send(JSON.stringify({ dir: ssr }));*/
-  }
-  else {
-    cout('n');
-  }
+  //}
+  //else {
+    //cout('n');
+  //}
 }
 var getoutdir = () => {
   var xhttp = new XMLHttpRequest();

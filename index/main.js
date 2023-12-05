@@ -534,7 +534,6 @@ function copydirectory() {
 function imageRefresh(f = true) {
     if (web) {
         cout("on web");
-        //addoutdir();
         return;
     }
     if (big == 1) {
