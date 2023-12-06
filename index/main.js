@@ -648,10 +648,11 @@ var timeremove = (ssr) => {
     }
 }
 
-var close_cropedit = () => {
+var close_cropedit = (f=true) => {
     //console.log('calling here');
-    var anum = document.querySelector("#full-image").getAttribute('num');
     document.querySelector("body > iframe").remove();
+    if(f){
+    var anum = document.querySelector("#full-image").getAttribute('num');
     var ttt = "?t=" + new Date().getTime();
     var ssr = timeremove(DATA[anum]);
     DATA[anum] = (web) ? URL.createObjectURL(croppedImage) : ssr + ttt;
@@ -659,6 +660,7 @@ var close_cropedit = () => {
         track_blob(cropeditval.blob_url, DATA[anum]);
     }
     document.querySelector("#full-image").src = DATA[anum];
+}
 }
 function fullscreen() {
     var elem = document.querySelector("body");//document.querySelector("#image-viewer"); //FULL screen

@@ -10,42 +10,51 @@ const repo = 'galleryfiles';
 var dblist = [];
 
 function deleteFile(path) {
-  // Fetch the current content and details of the file
-  fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `token ${token}`,
-    },
-  })
-    .then(response => response.json())
-    .then(data => {
-      // Delete the file on GitHub
-      fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `token ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: 'Delete file',
-          sha: data.sha,
-        }),
-      })
-        .then(response => response.json())
-        .then(deletedFile => {
-          //cout(JSON.parse(this.responseText).done);
-          //snackbar(JSON.parse(this.responseText).done);
-          snackbar("Deleted");
-
-          console.log('File deleted:', deletedFile);
-        })
-        .catch(error => {
-          console.error('Error deleting file:', error);
-        });
+  //path="kk/"+path;
+  console.log(path);
+// Fetch the current content and details of the file
+fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+  method: 'GET',
+  headers: {
+    'Authorization': `token ${token}`,
+  },
+})
+  .then(response => response.json())
+  .then(data => {
+    // Delete the file on GitHub
+    fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: 'Delete file',
+        sha: data.sha,
+      }),
     })
-    .catch(error => {
-      console.error('Error fetching file details:', error);
-    });
+      .then(response => {
+          console.log(response.status);
+          if (response.status==200) {
+              snackbar("Deleted");
+          }
+          if (response.status==401) {
+              snackbar("Auth Error");
+          }
+          if (response.status==422) {
+              snackbar("Not Found");
+          }
+      })
+      .then(deletedFile => {
+        //console.log('File deleted:', deletedFile);
+      })
+      .catch(error => {
+        console.error('Error deleting file:', error);
+      });
+  })
+  .catch(error => {
+    console.error('Error fetching file details:', error);
+  });
 }
 
 function updateFile(path, updatedBlob) {
@@ -76,10 +85,21 @@ function updateFile(path, updatedBlob) {
             sha: data.sha,
           }),
         })
-          .then(response => response.json())
+          .then(response => {
+            console.log(response.status);
+            if (response.status==200) {
+              snackbar("Updated");
+            }
+            if (response.status==401) {
+                snackbar("Auth Error");
+            }
+            if (response.status==422) {
+                snackbar("Not Found");
+            }
+        })
           .then(updatedFile => {
-            snackbar("Updated");
-            console.log('File updated:', updatedFile);
+            //snackbar("Updated");
+            //console.log('File updated:', updatedFile);
 
           })
           .catch(error => {
