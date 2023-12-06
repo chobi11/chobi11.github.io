@@ -43,7 +43,7 @@ function updateFile(path, updatedBlob) {
         })
           .then(response => {
             console.log(response.status);
-            if (response.status==200) {
+            /*if (response.status==200) {
               snackbar("Updated");
             }
             if (response.status==401) {
@@ -51,8 +51,8 @@ function updateFile(path, updatedBlob) {
             }
             if (response.status==422) {
                 snackbar("Not Found");
-            }
-            parent.close_cropedit(response.status==200);
+            }*/
+            parent.close_cropedit(response.status);
         })
           .then(updatedFile => {
             //snackbar("Updated");

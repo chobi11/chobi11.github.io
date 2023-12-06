@@ -109,14 +109,15 @@ function loader(arr) { //image loader function
         img.src = arr[rnum];
         img.setAttribute("num", rnum);
         img.addEventListener("error", () => {
-            if(web&&navigator.onLine){
-            cout(img.src);
-            img.src = DATA[parseInt(img.getAttribute("num")) + 1];
-            img.setAttribute("num", (parseInt(img.getAttribute("num")) + 1));}
-            else if(!web){
+            if (web && navigator.onLine) {
                 cout(img.src);
-            img.src = DATA[parseInt(img.getAttribute("num")) + 1];
-            img.setAttribute("num", (parseInt(img.getAttribute("num")) + 1));
+                img.src = DATA[parseInt(img.getAttribute("num")) + 1];
+                img.setAttribute("num", (parseInt(img.getAttribute("num")) + 1));
+            }
+            else if (!web) {
+                cout(img.src);
+                img.src = DATA[parseInt(img.getAttribute("num")) + 1];
+                img.setAttribute("num", (parseInt(img.getAttribute("num")) + 1));
             }
         });
         div.append(img);
@@ -621,7 +622,7 @@ var cropeditfunc = (a) => {
             }
             console.log(ssr);
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + DATA[anum]), web: web, phone: phone,blob_url:DATA[anum] } : { val: ((web) ? ssr : '.' + DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone,blob_url:DATA[anum] };
+            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + DATA[anum]), web: web, phone: phone, blob_url: DATA[anum] } : { val: ((web) ? ssr : '.' + DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone, blob_url: DATA[anum] };
             var ifrm = document.createElement("iframe");
             console.log((((new URL(document.URL)).hostname.includes('localhost') ? "http://localhost:5656/index/" : (new URL(document.URL)).hostname + "/index/")) + a + ".html");
             ifrm.setAttribute("src", ((document.URL.includes('5656') ? "http://" + (new URL(document.URL)).hostname + ":5656/index/" : 'https://' + (new URL(document.URL)).hostname + "/index/")) + a + ".html");
@@ -648,19 +649,28 @@ var timeremove = (ssr) => {
     }
 }
 
-var close_cropedit = (f=true) => {
+var close_cropedit = (f = 200) => {
     //console.log('calling here');
     document.querySelector("body > iframe").remove();
-    if(f){
-    var anum = document.querySelector("#full-image").getAttribute('num');
-    var ttt = "?t=" + new Date().getTime();
-    var ssr = timeremove(DATA[anum]);
-    DATA[anum] = (web) ? URL.createObjectURL(croppedImage) : ssr + ttt;
-    if(cropeditval.blob_url!=''){
-        track_blob(cropeditval.blob_url, DATA[anum]);
+    if (f == 200) {
+        var anum = document.querySelector("#full-image").getAttribute('num');
+        var ttt = "?t=" + new Date().getTime();
+        var ssr = timeremove(DATA[anum]);
+        DATA[anum] = (web) ? URL.createObjectURL(croppedImage) : ssr + ttt;
+        if (cropeditval.blob_url != '') {
+            track_blob(cropeditval.blob_url, DATA[anum]);
+        }
+        document.querySelector("#full-image").src = DATA[anum];
     }
-    document.querySelector("#full-image").src = DATA[anum];
-}
+    else if (response.status == 401) {
+        snackbar("Auth Error");
+    }
+    else if (response.status == 422) {
+        snackbar("Not Found");
+    }
+    else {
+        snackbar("Error");
+    }
 }
 function fullscreen() {
     var elem = document.querySelector("body");//document.querySelector("#image-viewer"); //FULL screen
@@ -932,29 +942,29 @@ function togglehider() {
 function resetToken() {
     var userInput = prompt("Please enter token:");
 
-if (userInput !== null && userInput !== "") {
-    fetch("https://api.github.com/user", {
-        headers: {
-          Authorization: `Bearer ${userInput}`,
-        },
-      })
-      .then(response => {
-        if (response.ok) {
-            localStorage.setItem('token',userInput);
-        snackbar('Token set');
-        } else {
-          snackbar("Invalid token");
-        }
-      })
-      .catch(error => {
-        snackbar("Error while checking GitHub token:");
-      });
+    if (userInput !== null && userInput !== "") {
+        fetch("https://api.github.com/user", {
+            headers: {
+                Authorization: `Bearer ${userInput}`,
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.setItem('token', userInput);
+                    snackbar('Token set');
+                } else {
+                    snackbar("Invalid token");
+                }
+            })
+            .catch(error => {
+                snackbar("Error while checking GitHub token:");
+            });
 
 
-    
-} else {
-  snackbar('no input');
-}
+
+    } else {
+        snackbar('no input');
+    }
 }
 
 function phnopt() {
@@ -1019,11 +1029,11 @@ function phnopt() {
             + ((big == 1) ? ((web) ? '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>'
                 : '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>') : '')
             + ((big == 1) ? `<tr><td><div><a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="subopt"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a>
-            `+((dlist.length!=0||dblist.length!=0)?`&nbsp;&nbsp;<a class="subopt"  onclick="UnDelete();hidephnopt();">Undel</a>`:``)
-            +`</div></td></tr>` : ``)
+            `+ ((dlist.length != 0 || dblist.length != 0) ? `&nbsp;&nbsp;<a class="subopt"  onclick="UnDelete();hidephnopt();">Undel</a>` : ``)
+                + `</div></td></tr>` : ``)
             +
-            
-            ((web) ? `<tr><td><div><a onclick="resetToken();hidephnopt();">Reset token</a></div></td></tr>`:``)
+
+            ((web) ? `<tr><td><div><a onclick="resetToken();hidephnopt();">Reset token</a></div></td></tr>` : ``)
             +
             `</table>
         
