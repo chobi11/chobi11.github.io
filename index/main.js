@@ -662,10 +662,10 @@ var close_cropedit = (f = 200) => {
         }
         document.querySelector("#full-image").src = DATA[anum];
     }
-    else if (response.status == 401) {
+    else if (f == 401) {
         snackbar("Auth Error");
     }
-    else if (response.status == 422) {
+    else if (f == 422) {
         snackbar("Not Found");
     }
     else {
