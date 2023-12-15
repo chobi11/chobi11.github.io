@@ -1,8 +1,8 @@
 
-var gitlink='https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
-const token = localStorage.getItem('token');
-const username = 'backup1122';
-const repo = 'galleryfiles';
+var gitlink=parent.gitlink;
+const token = parent.token;
+const username = parent.username;
+const repo = parent.repo;
 var blobtoDataURL = function (blob) {
     return new Promise((resolve, reject) => {
         var a = new FileReader();

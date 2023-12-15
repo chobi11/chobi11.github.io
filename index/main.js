@@ -950,6 +950,7 @@ function resetToken() {
         })
             .then(response => {
                 if (response.ok) {
+                    token = userInput;
                     localStorage.setItem('token', userInput);
                     snackbar('Token set');
                 } else {
