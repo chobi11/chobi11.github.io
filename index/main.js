@@ -242,7 +242,7 @@ function cmobile() {
             var x = e.pageX - pOffset.left;
             var y = e.pageY - pOffset.top;
 
-            if (pHeight * .1 < y && pHeight * .6 > y) {
+            if (pHeight * .2 < y && pHeight * .6 > y) {
                 if (pWidth * .4 > x) {
                     left();
                 }
