@@ -238,7 +238,7 @@ fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: 'Upload file via API',
+          message: 'Restore',
           content: fileContentBase64,
           sha: latestCommitSha,
           branch: branch,
