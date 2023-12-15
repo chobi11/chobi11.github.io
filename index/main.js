@@ -880,6 +880,7 @@ function shortcut() {
         <tr><td><div>Dev Mode</div></td><td onclick="devonoff();"><div class="link">`+ dev + `</div></td></tr>
         <tr><td><div>Hider (H)</div></td><td onclick="togglehider();"><div class="link">`+ h + `</div></td></tr>
         <tr><td><div>Idle Timer(SA+K)</div></td><td onclick="idleTimerFunc();"><div class="link">`+ localStorage.getItem('idle') + `</div></td></tr>
+        <tr><td><div>Reset Token</div></td><td onclick="resetToken();"><div class="link">Reset</div></td></tr>
         <tr><td><div>left|n4</div>|<div>right|n6</div></td><td>Right|Left Image.</td></tr>
         <tr><td><div>A|<|n1</div>|<div>D|>|n3</div></td><td>Right|Left Image(same folder).</td></tr>
         <tr><td><div>L|Bsp|Esc</div></td><td>Close Viewer.</td></tr>
