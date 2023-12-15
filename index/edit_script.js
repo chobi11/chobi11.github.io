@@ -1,9 +1,9 @@
 
 (function () {
   var gitlink=parent.gitlink;
-const token = parent.token;
-const username = parent.username;
-const repo = parent.repo;
+var token = parent.token;
+var username = parent.username;
+var repo = parent.repo;
 if(parent.phone){
   document.querySelector("#tools").style.zoom=2;
 }

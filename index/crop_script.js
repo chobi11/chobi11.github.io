@@ -1,9 +1,8 @@
 
 var gitlink=parent.gitlink;
-const token = parent.token;
-const username = parent.username;
-const repo = parent.repo;
-console.log(gitlink,token,username,repo);
+var token = parent.token;
+var username = parent.username;
+var repo = parent.repo;
 var blobtoDataURL = function (blob) {
     return new Promise((resolve, reject) => {
         var a = new FileReader();

@@ -4,9 +4,9 @@ var rotatef = true;
 var outlink = "https://gdpy.onrender.com";
 //var outlink='http://127.0.0.1:5000'
 var gitlink = 'https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
-const token = localStorage.getItem('token');
-const username = 'backup1122';
-const repo = 'galleryfiles';
+var token = localStorage.getItem('token');
+var username = 'backup1122';
+var repo = 'galleryfiles';
 var dblist = [];
 
 function deleteFile(path) {
