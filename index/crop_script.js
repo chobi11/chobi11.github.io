@@ -155,7 +155,7 @@ function t(e) {
   if(parent.phone){
     var ratio = window.devicePixelRatio || 1;
 width = (screen.availWidth * ratio)*.8;
-height = (screen.availHeight * ratio)*.8;
+height = (screen.availHeight * ratio)*.7;
   }
   else{
 height = screen.availHeight * .8;
