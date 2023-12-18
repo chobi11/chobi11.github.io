@@ -336,6 +336,7 @@ function refresh(a = 0) {
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("refresh=90");
 }
+/*
 function saver() {
   if (web) {
     cout("on web");
@@ -355,6 +356,7 @@ function saver() {
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send("dat=DATA=" + JSON.stringify(DATA.slice(1, 1000)) + ";");
 }
+
 function DeleteAll(data) {
   if (web) {
     cout("on web");
@@ -386,6 +388,7 @@ function DeleteAll(data) {
 
 
 }
+*/
 function ReverseAll() {
   if (web) {
     cout("on web");
@@ -434,6 +437,7 @@ function ReverseAll() {
 
 
 }
+/*
 function RotateAll(data) {
   if (web) {
     cout("on web");
@@ -488,4 +492,5 @@ var syncout = (limit = 172800000) => {
   }
 }
 //syncout();
+*/
 

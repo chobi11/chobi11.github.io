@@ -9,7 +9,34 @@ var username = 'backup1122';
 var repo = 'galleryfiles';
 var dblist = [];
 var del_blob_list = [];
+function resetToken() {
+  var userInput = prompt("Please enter token:");
 
+  if (userInput !== null && userInput !== "") {
+      fetch("https://api.github.com/user", {
+          headers: {
+              Authorization: `Bearer ${userInput}`,
+          },
+      })
+          .then(response => {
+              if (response.ok) {
+                  token = userInput;
+                  localStorage.setItem('token', userInput);
+                  snackbar('Token set');
+              } else {
+                  snackbar("Invalid token");
+              }
+          })
+          .catch(error => {
+              snackbar("Error while checking GitHub token:");
+          });
+
+
+
+  } else {
+      snackbar('no input');
+  }
+}
 function deleteFile(path) {
   console.log(path);
 
@@ -52,7 +79,7 @@ function deleteFile(path) {
     });
 }
 
-var addoutdir = (ssr) => {
+var add_del_dir = (ssr) => {
   return fetch(outlink + "/adddeletedir", {
     method: 'POST',
     headers: {
@@ -122,16 +149,16 @@ function updateFile(path, updatedBlob) {
         })
           .then(response => {
             console.log(response.status);
-            if (response.status==200) {
+            if (response.status == 200) {
               snackbar("Updated");
             }
-            if (response.status==401) {
-                snackbar("Auth Error");
+            if (response.status == 401) {
+              snackbar("Auth Error");
             }
-            if (response.status==422) {
-                snackbar("Not Found");
+            if (response.status == 422) {
+              snackbar("Not Found");
             }
-        })
+          })
           .then(updatedFile => {
             //snackbar("Updated");
             //console.log('File updated:', updatedFile);
@@ -198,30 +225,6 @@ var get_blob2src = (dd) => {
   return dr;
 }
 
-var track_del_blob = (dd, ndd) => {
-  var f = 0;
-  del_blob_list.forEach(function (obj) {
-    if (obj.ndir === dd) {
-      f = 1;
-      obj.ndir = ndd;
-    }
-  });
-  if (f == 0) {
-    //console.log(44);
-    blob_list.push({ ndir: ndd, dir: dd });
-  }
-  console.log(blob_list);
-}
-var get_del_blob2src = (dd) => {
-  var dr = "";
-  del_blob_list.forEach(function (obj) {
-    if (obj.ndir === dd) {
-      //console.log(obj.dir);
-      dr = obj.dir;
-    }
-  });
-  return dr;
-}
 
 function UnDeleteWeb() {
   if (dblist.length == 0) {
@@ -238,7 +241,7 @@ function UnDeleteWeb() {
     var lshift = kkk.num == parseInt(document.querySelector("#full-image").getAttribute("num"));
     var rshift = kkk.num == (parseInt(document.querySelector("#full-image").getAttribute("num")) + 1);
     //track_blob(kkk.src, kkk.blob_url);
-    DATA.insert(kkk.num, kkk.blob_url);
+    DATA.insert(kkk.num, kkk.src);
     var mainimages = document.querySelector("body > div.images").childNodes;
 
     for (var i = 1; i < mainimages.length; i++) {
@@ -260,15 +263,15 @@ function UnDeleteWeb() {
       leftRightTrack = 1;
     }
     //upload(kkk.src.replace(gitlink,''),kkk.blob);
-    Promise.all([upload(kkk.src.replace(gitlink,''),kkk.blob), deldeletedir(kkk.src.replace(gitlink,''))])
-  .then(() => {
-    console.log("Both operations completed successfully.");
-  })
-  .catch(err => {
-    console.error("An error occurred:", err);
-  });
+    Promise.all([upload(kkk.src.replace(gitlink, ''), kkk.blob), deldeletedir(kkk.src.replace(gitlink, ''))])
+      .then(() => {
+        console.log("Both operations completed successfully.");
+      })
+      .catch(err => {
+        console.error("An error occurred:", err);
+      });
     //if (this.responseText == "done") {
-      
+
     //}
 
   }
@@ -277,60 +280,59 @@ function UnDeleteWeb() {
   }
 }
 
-var upload=(path,blob)=>
-{
-  branch='master';
-fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`, {
-  method: 'GET',
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-})
-  .then(response => response.json())
-  .then(data => {
-    const latestCommitSha = data.object.sha;
-
-    // Step 3: Create a Blob
-
-    // Step 4: Read the Blob
-    const reader = new FileReader();
-    reader.onload = function () {
-      const fileContentBase64 = btoa(reader.result);
-
-      // Step 5: Upload the File
-      fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-        method: 'PUT', // or 'POST' for creating a new file
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: 'Restore',
-          content: fileContentBase64,
-          sha: latestCommitSha,
-          branch: branch,
-        }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log('File uploaded successfully:', data);
-          snackbar("Restored");
-      var i = parseInt(localStorage.delc);
-      if (i >= 1) {
-        i--;
-        localStorage.delc = i;
-      }
-        })
-        .catch(error => {
-          console.error('Error uploading file:', error);
-        });
-    };
-
-    reader.readAsBinaryString(blob);
+var upload = (path, blob) => {
+  branch = 'master';
+  fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   })
-  .catch(error => {
-    console.error('Error getting latest commit sha:', error);
-  });
+    .then(response => response.json())
+    .then(data => {
+      const latestCommitSha = data.object.sha;
+
+      // Step 3: Create a Blob
+
+      // Step 4: Read the Blob
+      const reader = new FileReader();
+      reader.onload = function () {
+        const fileContentBase64 = btoa(reader.result);
+
+        // Step 5: Upload the File
+        fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+          method: 'PUT', // or 'POST' for creating a new file
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: 'Restore',
+            content: fileContentBase64,
+            sha: latestCommitSha,
+            branch: branch,
+          }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('File uploaded successfully:', data);
+            snackbar("Restored");
+            var i = parseInt(localStorage.delc);
+            if (i >= 1) {
+              i--;
+              localStorage.delc = i;
+            }
+          })
+          .catch(error => {
+            console.error('Error uploading file:', error);
+          });
+      };
+
+      reader.readAsBinaryString(blob);
+    })
+    .catch(error => {
+      console.error('Error getting latest commit sha:', error);
+    });
 }
 var DeleteWeb = () => {
   var dell = 0;
@@ -338,90 +340,90 @@ var DeleteWeb = () => {
     fullscreen();
   }
   //if (confirm("Are you sure")) {
-    cout('y');
-    var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
-    var ssr = DATA[anum];
-    var msrc = get_blob2src(ssr);
-            if (msrc != "") {
-                ssr = msrc;
-            }
-    cout(ssr);
-    if (ssr.includes('?t=')) {
-      ssr = ssr.replace('?t=', ':');
-      ssr = /(.+):/.exec(ssr)[1];
-    }
-    if (document.querySelector("#full-image").src == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
-      nowsame = 1;//not changed
-    }
-    else {
-      nowsame = 0;//changed
-    }
-    DATA.splice(anum, 1);
-    if (leftRightTrack == 0) {
-      document.querySelector("#full-image").src = DATA[anum];
-      //console.log('if');
-    }
-    else {
-      leftl();
-      //console.log('else')
-    }
-    
-    if (nowsame == 1) {
-      document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
-      //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
-    }
-    var mainimages = document.querySelector("body > div.images").childNodes;
-    // if (document.querySelector("#full-image").getAttribute('num') < document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) {//num sync after delete image for re clicking
-    //   document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
-    // }
-    for (var i = 1; i < mainimages.length; i++) {
-      if (mainimages[i].getAttribute('num') > anum) {
-        mainimages[i].setAttribute('num', (parseInt(mainimages[i].getAttribute('num')) - 1));
-      }
-    }
+  cout('y');
+  var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
+  var ssr = DATA[anum];
+  var msrc = get_blob2src(ssr);
+  if (msrc != "") {
+    ssr = msrc;
+  }
+  cout(ssr);
+  if (ssr.includes('?t=')) {
+    ssr = ssr.replace('?t=', ':');
+    ssr = /(.+):/.exec(ssr)[1];
+  }
+  if (document.querySelector("#full-image").src == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
+    nowsame = 1;//not changed
+  }
+  else {
+    nowsame = 0;//changed
+  }
+  DATA.splice(anum, 1);
+  if (leftRightTrack == 0) {
+    document.querySelector("#full-image").src = DATA[anum];
+    //console.log('if');
+  }
+  else {
+    leftl();
+    //console.log('else')
+  }
 
-    path = ssr.replace(gitlink, '');
-    Promise.all([deleteFile(path), addoutdir(path)])
-  .then(() => {
-    console.log("Both operations completed successfully.");
-  })
-  .catch(err => {
-    console.error("An error occurred:", err);
-  });
-    
+  if (nowsame == 1) {
+    document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
+    //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
+  }
+  var mainimages = document.querySelector("body > div.images").childNodes;
+  // if (document.querySelector("#full-image").getAttribute('num') < document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) {//num sync after delete image for re clicking
+  //   document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
+  // }
+  for (var i = 1; i < mainimages.length; i++) {
+    if (mainimages[i].getAttribute('num') > anum) {
+      mainimages[i].setAttribute('num', (parseInt(mainimages[i].getAttribute('num')) - 1));
+    }
+  }
 
-// Fetch the image as a Blob
-fetch(ssr)
-  .then(response => response.blob())
-  .then(blob => {
-    console.log(blob);
+  path = ssr.replace(gitlink, '');
+  Promise.all([deleteFile(path), add_del_dir(path)])
+    .then(() => {
+      console.log("Both operations completed successfully.");
+    })
+    .catch(err => {
+      console.error("An error occurred:", err);
+    });
 
-    const blobUrl = URL.createObjectURL(blob);
-    console.log('Blob URL:', blobUrl);
-      var b={src:ssr,blob:blob,blob_url:blobUrl,num:anum,now: now}
+
+  // Fetch the image as a Blob
+  fetch(ssr)
+    .then(response => response.blob())
+    .then(blob => {
+      console.log(blob);
+
+      const blobUrl = URL.createObjectURL(blob);
+      console.log('Blob URL:', blobUrl);
+      var b = { src: ssr, blob: blob, blob_url: blobUrl, num: anum, now: now }
       dblist.push(b);
-      
 
-  })
-  .catch(error => {
-    console.error('Error fetching image:', error);
-  });
-    
-}
-var getoutdir = () => {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      cout(this.responseText);
-      DeleteAll(this.responseText);
-    }
-  };
-  xhttp.open("GET", outlink + "/getdeletedir", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-  xhttp.send();
+    })
+    .catch(error => {
+      console.error('Error fetching image:', error);
+    });
 
 }
+// var getoutdir = () => {
+//   var xhttp = new XMLHttpRequest();
+//   xhttp.onreadystatechange = function () {
+//     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
+//       cout(this.responseText);
+//       DeleteAll(this.responseText);
+//     }
+//   };
+//   xhttp.open("GET", outlink + "/getdeletedir", true);
+//   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+//   xhttp.send();
+
+// }
 var addouthold = () => {
 
   var xhttp = new XMLHttpRequest();
@@ -495,54 +497,54 @@ var getouthold = (flush = false) => {
 
 }
 
-var getoutrotatedir = () => {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      cout(this.responseText);
-      RotateAll(this.responseText);
-    }
-  };
-  xhttp.open("GET", outlink + "/getrotatedir", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+// var getoutrotatedir = () => {
+//   var xhttp = new XMLHttpRequest();
+//   xhttp.onreadystatechange = function () {
+//     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
+//       cout(this.responseText);
+//       RotateAll(this.responseText);
+//     }
+//   };
+//   xhttp.open("GET", outlink + "/getrotatedir", true);
+//   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-  xhttp.send();
+//   xhttp.send();
 
-}
-var clearoutdir = () => {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      cout(JSON.parse(this.responseText).done);
+// }
+// var clearoutdir = () => {
+//   var xhttp = new XMLHttpRequest();
+//   xhttp.onreadystatechange = function () {
+//     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
+//       cout(JSON.parse(this.responseText).done);
 
-      console.log("Cleared delete list");
-      //snackbar("Cleared");
+//       console.log("Cleared delete list");
+//       //snackbar("Cleared");
 
-    }
-  };
-  xhttp.open("GET", outlink + "/cleardelete", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//     }
+//   };
+//   xhttp.open("GET", outlink + "/cleardelete", true);
+//   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-  xhttp.send();
+//   xhttp.send();
 
-}
-var clearoutrotatedir = () => {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      cout(JSON.parse(this.responseText).done);
+// }
+// var clearoutrotatedir = () => {
+//   var xhttp = new XMLHttpRequest();
+//   xhttp.onreadystatechange = function () {
+//     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
+//       cout(JSON.parse(this.responseText).done);
 
-      console.log("Cleared rotate list");
-      //snackbar("Cleared");
+//       console.log("Cleared rotate list");
+//       //snackbar("Cleared");
 
-    }
-  };
-  xhttp.open("GET", outlink + "/clearrotate", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//     }
+//   };
+//   xhttp.open("GET", outlink + "/clearrotate", true);
+//   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-  xhttp.send();
+//   xhttp.send();
 
-}
+// }
 function rotateweb(srcBase64, degrees, callback) {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');

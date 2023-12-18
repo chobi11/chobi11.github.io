@@ -940,35 +940,6 @@ function togglehider() {
     }
 }
 
-function resetToken() {
-    var userInput = prompt("Please enter token:");
-
-    if (userInput !== null && userInput !== "") {
-        fetch("https://api.github.com/user", {
-            headers: {
-                Authorization: `Bearer ${userInput}`,
-            },
-        })
-            .then(response => {
-                if (response.ok) {
-                    token = userInput;
-                    localStorage.setItem('token', userInput);
-                    snackbar('Token set');
-                } else {
-                    snackbar("Invalid token");
-                }
-            })
-            .catch(error => {
-                snackbar("Error while checking GitHub token:");
-            });
-
-
-
-    } else {
-        snackbar('no input');
-    }
-}
-
 function phnopt() {
 
     var h = localStorage.getItem('hider');
