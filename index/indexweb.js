@@ -8,54 +8,89 @@ var token = localStorage.getItem('token');
 var username = 'backup1122';
 var repo = 'galleryfiles';
 var dblist = [];
+var del_blob_list = [];
 
 function deleteFile(path) {
-  //path="kk/"+path;
   console.log(path);
-// Fetch the current content and details of the file
-fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-  method: 'GET',
-  headers: {
-    'Authorization': `token ${token}`,
-  },
-})
-  .then(response => response.json())
-  .then(data => {
-    // Delete the file on GitHub
-    fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: 'Delete file',
-        sha: data.sha,
-      }),
-    })
-      .then(response => {
-          console.log(response.status);
-          if (response.status==200) {
-              snackbar("Deleted");
-          }
-          if (response.status==401) {
-              snackbar("Auth Error");
-          }
-          if (response.status==422) {
-              snackbar("Not Found");
-          }
-      })
-      .then(deletedFile => {
-        //console.log('File deleted:', deletedFile);
-      })
-      .catch(error => {
-        console.error('Error deleting file:', error);
-      });
+
+  // Fetch the current content and details of the file
+  const getFileDetails = fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `token ${token}`,
+    },
   })
-  .catch(error => {
-    console.error('Error fetching file details:', error);
-  });
+    .then(response => response.json());
+
+  getFileDetails
+    .then(data => {
+      // Delete the file on GitHub
+      return fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'Delete file',
+          sha: data.sha,
+        }),
+      });
+    })
+    .then(response => {
+      console.log(response.status);
+      if (response.status === 200) {
+        snackbar("Deleted");
+      } else if (response.status === 401) {
+        snackbar("Auth Error");
+      } else if (response.status === 422) {
+        snackbar("Not Found");
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting file:', error);
+    });
 }
+
+var addoutdir = (ssr) => {
+  return fetch(outlink + "/adddeletedir", {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify({ dir: ssr }),
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('done');
+      } else {
+        console.error('Error adding directory:', response.statusText);
+      }
+    })
+    .catch(error => {
+      console.error('Error adding directory:', error);
+    });
+};
+
+var deldeletedir = (ssr) => {
+  return fetch(outlink + "/deldeletedir", {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    body: JSON.stringify({ dir: ssr }),
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('done');
+      } else {
+        console.error('Error adding directory:', response.statusText);
+      }
+    })
+    .catch(error => {
+      console.error('Error adding directory:', error);
+    });
+};
 
 function updateFile(path, updatedBlob) {
   // Fetch the current content and details of the file
@@ -163,6 +198,31 @@ var get_blob2src = (dd) => {
   return dr;
 }
 
+var track_del_blob = (dd, ndd) => {
+  var f = 0;
+  del_blob_list.forEach(function (obj) {
+    if (obj.ndir === dd) {
+      f = 1;
+      obj.ndir = ndd;
+    }
+  });
+  if (f == 0) {
+    //console.log(44);
+    blob_list.push({ ndir: ndd, dir: dd });
+  }
+  console.log(blob_list);
+}
+var get_del_blob2src = (dd) => {
+  var dr = "";
+  del_blob_list.forEach(function (obj) {
+    if (obj.ndir === dd) {
+      //console.log(obj.dir);
+      dr = obj.dir;
+    }
+  });
+  return dr;
+}
+
 function UnDeleteWeb() {
   if (dblist.length == 0) {
     snackbar("Nothing to undelete");
@@ -199,7 +259,14 @@ function UnDeleteWeb() {
       }
       leftRightTrack = 1;
     }
-    upload(kkk.src.replace(gitlink,''),kkk.blob);
+    //upload(kkk.src.replace(gitlink,''),kkk.blob);
+    Promise.all([upload(kkk.src.replace(gitlink,''),kkk.blob), deldeletedir(kkk.src.replace(gitlink,''))])
+  .then(() => {
+    console.log("Both operations completed successfully.");
+  })
+  .catch(err => {
+    console.error("An error occurred:", err);
+  });
     //if (this.responseText == "done") {
       
     //}
@@ -314,7 +381,13 @@ var DeleteWeb = () => {
     }
 
     path = ssr.replace(gitlink, '');
-    deleteFile(path);
+    Promise.all([deleteFile(path), addoutdir(path)])
+  .then(() => {
+    console.log("Both operations completed successfully.");
+  })
+  .catch(err => {
+    console.error("An error occurred:", err);
+  });
     
 
 // Fetch the image as a Blob
@@ -327,37 +400,13 @@ fetch(ssr)
     console.log('Blob URL:', blobUrl);
       var b={src:ssr,blob:blob,blob_url:blobUrl,num:anum,now: now}
       dblist.push(b);
+      
 
   })
   .catch(error => {
     console.error('Error fetching image:', error);
   });
-    /*var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-      if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-        cout(JSON.parse(this.responseText).done);
-        snackbar(JSON.parse(this.responseText).done);
-        var anum = parseInt(document.querySelector("#full-image").getAttribute("num"));
-        DATA.splice(anum, 1);
-        document.querySelector("#full-image").src = DATA[anum];
-        if (dell == 1) {
-          document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
-          //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
-        }
-        if (document.querySelector("#full-image").getAttribute('num') < document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num')) {
-          document.querySelector("body > div.images > img:nth-child(" + now + ")").setAttribute('num', (document.querySelector("body > div.images > img:nth-child(" + now + ")").getAttribute('num') - 1));
-        }
-
-      }
-    };
-    xhttp.open("POST", outlink+"/adddeletedir", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-
-    xhttp.send(JSON.stringify({ dir: ssr }));*/
-  //}
-  //else {
-    //cout('n');
-  //}
+    
 }
 var getoutdir = () => {
   var xhttp = new XMLHttpRequest();
