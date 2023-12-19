@@ -225,7 +225,23 @@ var get_blob2src = (dd) => {
   return dr;
 }
 
+var syncDel = () => {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
+      cout(JSON.parse(this.responseText).done);
 
+      snackbar("Updated Data");
+      //snackbar("Cleared");
+
+    }
+  };
+  xhttp.open("GET", outlink + "/updatedir", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  xhttp.send();
+
+}
 function UnDeleteWeb() {
   if (dblist.length == 0) {
     snackbar("Nothing to undelete");
