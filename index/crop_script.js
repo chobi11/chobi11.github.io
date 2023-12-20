@@ -14,21 +14,22 @@ var blobtoDataURL = function (blob) {
 }
 
 function updateFile(path, updatedBlob) {
-  // Read the Blob content as a data URL
-  const reader = new FileReader();
-  reader.onloadend = function () {
-    const base64data = reader.result.split(',')[1];
+  // Fetch the current content and details of the file
+  fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `token ${token}`,
+    },
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Read the Blob content as a data URL
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        const base64data = reader.result.split(',')[1];
 
-    // Fetch the file details and update the file on GitHub
-    fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `token ${token}`,
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        return fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+        // Update the file on GitHub
+        fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
           method: 'PUT',
           headers: {
             'Authorization': `token ${token}`,
@@ -39,18 +40,35 @@ function updateFile(path, updatedBlob) {
             content: base64data,
             sha: data.sha,
           }),
-        });
-      })
-      .then(response => {
-        console.log(response.status);
-        parent.close_cropedit(response.status);
-      })
-      .catch(error => {
-        console.error('Error updating file:', error);
-      });
-  };
+        })
+          .then(response => {
+            console.log(response.status);
+            /*if (response.status==200) {
+              snackbar("Updated");
+            }
+            if (response.status==401) {
+                snackbar("Auth Error");
+            }
+            if (response.status==422) {
+                snackbar("Not Found");
+            }*/
+            parent.close_cropedit(response.status);
+        })
+          .then(updatedFile => {
+            //snackbar("Updated");
+            //console.log('File updated:', updatedFile);
 
-  reader.readAsDataURL(updatedBlob);
+          })
+          .catch(error => {
+            console.error('Error updating file:', error);
+          });
+      };
+
+      reader.readAsDataURL(updatedBlob);
+    })
+    .catch(error => {
+      console.error('Error fetching file details:', error);
+    });
 }
 
 function t(e) {

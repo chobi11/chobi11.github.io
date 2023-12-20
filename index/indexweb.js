@@ -37,32 +37,47 @@ function resetToken() {
       snackbar('no input');
   }
 }
-async function deleteFile(path) {
-  try {
-    const response = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: 'Delete file',
-      }),
+function deleteFile(path) {
+  console.log(path);
+
+  // Fetch the current content and details of the file
+  const getFileDetails = fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `token ${token}`,
+    },
+  })
+    .then(response => response.json());
+
+  getFileDetails
+    .then(data => {
+      // Delete the file on GitHub
+      return fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: 'Delete file',
+          sha: data.sha,
+        }),
+      });
+    })
+    .then(response => {
+      console.log(response.status);
+      if (response.status === 200) {
+        snackbar("Deleted");
+      } else if (response.status === 401) {
+        snackbar("Auth Error");
+      } else if (response.status === 422) {
+        snackbar("Not Found");
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting file:', error);
     });
-
-    console.log(response.status);
-    if (response.status === 200) {
-      snackbar("Deleted");
-    } else if (response.status === 401) {
-      snackbar("Auth Error");
-    } else if (response.status === 422) {
-      snackbar("Not Found");
-    }
-  } catch (error) {
-    console.error('Error deleting file:', error);
-  }
 }
-
 
 var add_del_dir = (ssr) => {
   return fetch(outlink + "/adddeletedir", {
@@ -105,21 +120,22 @@ var deldeletedir = (ssr) => {
 };
 
 function updateFile(path, updatedBlob) {
-  // Read the Blob content as a data URL
-  const reader = new FileReader();
-  reader.onloadend = function () {
-    const base64data = reader.result.split(',')[1];
+  // Fetch the current content and details of the file
+  fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `token ${token}`,
+    },
+  })
+    .then(response => response.json())
+    .then(data => {
+      // Read the Blob content as a data URL
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        const base64data = reader.result.split(',')[1];
 
-    // Fetch the file details and update the file on GitHub
-    fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `token ${token}`,
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        return fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+        // Update the file on GitHub
+        fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
           method: 'PUT',
           headers: {
             'Authorization': `token ${token}`,
@@ -130,26 +146,35 @@ function updateFile(path, updatedBlob) {
             content: base64data,
             sha: data.sha,
           }),
-        });
-      })
-      .then(response => {
-        console.log(response.status);
-        if (response.status === 200) {
-          snackbar("Updated");
-        } else if (response.status === 401) {
-          snackbar("Auth Error");
-        } else if (response.status === 422) {
-          snackbar("Not Found");
-        }
-      })
-      .catch(error => {
-        console.error('Error updating file:', error);
-      });
-  };
+        })
+          .then(response => {
+            console.log(response.status);
+            if (response.status == 200) {
+              snackbar("Updated");
+            }
+            if (response.status == 401) {
+              snackbar("Auth Error");
+            }
+            if (response.status == 422) {
+              snackbar("Not Found");
+            }
+          })
+          .then(updatedFile => {
+            //snackbar("Updated");
+            //console.log('File updated:', updatedFile);
 
-  reader.readAsDataURL(updatedBlob);
+          })
+          .catch(error => {
+            console.error('Error updating file:', error);
+          });
+      };
+
+      reader.readAsDataURL(updatedBlob);
+    })
+    .catch(error => {
+      console.error('Error fetching file details:', error);
+    });
 }
-
 
 function rotateout(deg = 90) {
 
