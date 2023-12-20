@@ -226,6 +226,7 @@ var get_blob2src = (dd) => {
 }
 
 var syncDel = () => {
+  snackbar("Updating");
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
