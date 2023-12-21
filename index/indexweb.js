@@ -224,7 +224,6 @@ var get_blob2src = (dd) => {
   });
   return dr;
 }
-
 var syncDel = () => {
   snackbar("Updating");
   var xhttp = new XMLHttpRequest();
@@ -232,7 +231,7 @@ var syncDel = () => {
     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
       cout(JSON.parse(this.responseText).done);
 
-      snackbar("Updated Data");
+      snackbar("Updated Data || "+JSON.parse(this.responseText).no);
       //snackbar("Cleared");
 
     }
