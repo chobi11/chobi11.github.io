@@ -274,8 +274,26 @@ if (!phone) {
             return;
         }
         cout(ev.keyCode);
+        //start audio
+        if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 77) { //M
+            turnAudioOn();
+
+        } else if ( /*ev.ctrlKey && */ ev.shiftKey && ev.altKey && ev.keyCode === 188) {
+            volDown();
+
+
+        } else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 190) {
+            volUp();
+
+
+        }
+        else if (ev.keyCode === 77) { //M
+            trunAudioOff();
+
+        }
+        //end audio
         //start right left
-        if ([99, 34, 190].includes(ev.keyCode)) {//
+        else if ([99, 34, 190].includes(ev.keyCode)) {//
             rightl();
         } else if ([97, 35, 188].includes(ev.keyCode)) {
             leftl();
@@ -341,24 +359,7 @@ if (!phone) {
 
         }
         //end hide
-        //start audio
-        else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 77) { //M
-            turnAudioOn();
-
-        } else if ( /*ev.ctrlKey && */ ev.shiftKey && ev.altKey && ev.keyCode === 188) {
-            volDown();
-
-
-        } else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 190) {
-            volUp();
-
-
-        }
-        else if (ev.keyCode === 77) { //M
-            trunAudioOff();
-
-        }
-        //end audio
+        
         //start server work
         else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && [46, 110, 220, 0].includes(ev.keyCode)) {
             //unhide(ev.keyCode);  
@@ -390,11 +391,18 @@ if (!phone) {
             refresh();
 
         }
-        else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 85) {
-            //unhide(ev.keyCode);  
+        else if (ev.shiftKey && ev.altKey && ev.keyCode === 85) {
             if (big == 1) {
-
-                //playstop();
+                rotate(180);
+            }
+        }
+        else if (ev.shiftKey &&  ev.keyCode === 85) {
+            if (big == 1) {
+                rotate(270);
+            }
+        }
+        else if (ev.keyCode === 85) {
+            if (big == 1) {
                 rotate();
             }
         } else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && ev.keyCode === 69) {
@@ -414,10 +422,10 @@ if (!phone) {
                 opens('o');
             }
         }
-        else if (ev.keyCode === 85) {
-            imageRefresh();
+        // else if (ev.keyCode === 85) {
+        //     imageRefresh();
 
-        }
+        // }
         else if (ev.keyCode === 67) { //C
             copydirectory();
 

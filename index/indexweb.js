@@ -176,7 +176,7 @@ function updateFile(path, updatedBlob) {
     });
 }
 
-function rotateout(deg = 90) {
+function rotateWeb(deg = 90) {
 
   if (rotatef) {
     rotatef = false;
@@ -224,6 +224,7 @@ var get_blob2src = (dd) => {
   });
   return dr;
 }
+
 var syncDel = () => {
   snackbar("Updating");
   var xhttp = new XMLHttpRequest();
