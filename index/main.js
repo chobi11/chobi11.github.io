@@ -1001,9 +1001,10 @@ function phnopt() {
         <table id="iks_list">
         <tr><td><div><a onclick="if(localStorage.getItem('hider')=='off'){localStorage.setItem('hider','on');
     hider();}else{localStorage.setItem('hider','off');}">hider `+ localStorage.getItem('hider') + `</a></div></td></tr>
-        <tr><td><div><a class="subopt"  onclick="hold();hidephnopt();">hold</a>&nbsp;&nbsp;
-        <a class="subopt"  onclick="unholdl();hidephnopt();">unhold list</a>&nbsp;&nbsp;`
-            + ((unholdf) ? `<a class="subopt"  onclick="unholdc();hidephnopt();">undo</a>` : '') +
+        <tr><td><div><a class="subopt"  onclick="hold();hidephnopt();">hold</a>&nbsp;
+        <a class="subopt"  onclick="unholdl();hidephnopt();">unhold list</a>&nbsp;`
+            + ((unholdf) ? `<a class="subopt"  onclick="unholdc();hidephnopt();">undo</a>&nbsp;
+            <a class="subopt"  onclick="delholdl();hidephnopt();">delc</a>` : '') +
 
             `</div></td></tr><tr><td><div>`
             + ((localStorage.getItem("col") != 1) ? `<a class="subopt"  onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
@@ -1031,6 +1032,7 @@ function phnopt() {
     } else document.querySelector("body").appendChild(eHelp);
 
 }
+
 function hidephnopt() {
 
     if (document.querySelector("#help") != null) {
@@ -1038,7 +1040,83 @@ function hidephnopt() {
         document.querySelector("#iks_help > style").remove();
     }
 }
+/*
+function phnconfirm(txt) {
+var econfirm=false;
 
+    if (document.querySelector("#confirm") == null && localStorage.getItem('hide1') != '0' && localStorage.getItem('hide') != '0') {
+        (econfirm = document.createElement("DIV")).id = "iks_confirm";
+        econfirm.innerHTML = `<style>
+        #iks_confirm{position:fixed;z-index:999999999;left:0;top:0;right:0;bottom:0;background:rgb(0,0,0,0.5);cursor:pointer;display: flex;align-items: center;}
+        .subopt{border: 2px solid #beaeae;padding: .8em;
+        }
+        #confirm{    position: fixed;
+    
+    border: 2px solid #000;
+    border-radius: 0.5em;
+    padding: 0.5em;
+    background: #000;
+    font-size: 11pt;
+    line-height: normal;
+    width: 100%;}
+    table#iks_list {
+    width: 100%;
+}
+        #iks_list tr:nth-child(2n+1){background:#eee}
+        #iks_list div{padding-right: 5px;
+    
+    border: 1px solid #000;
+    border-radius: 0.3em;
+    background: #000;
+    text-align: center;
+    font-weight: bold;
+    line-height: 3em;
+    color:white;
+    font-size: 3em;}
+    @media only screen and (max-height: 1000px) and (max-width: 1000px) {
+        #iks_list div {font-size: 1em;
+            line-height: 1.5em;
+}
+    }
+    
+    
+        </style>
+        <div id="confirm">
+        <table id="iks_list">
+        <tr><td><div>
+        `+txt+`
+        </tr></td></div>
+        <tr><td><div><a onclick="econfirm=true;hidephnconfirm();">Yes</a></div> <div><a onclick="econfirm=false;hidephnconfirm();">No</a></div></td>
+        
+        </tr>
+    
+    </table>
+        
+        </div>`;
+        econfirm.onclick = () => econfirm.remove();
+    }
+    if (econfirm.parentNode) {
+        econfirm.remove();
+    } else document.querySelector("body").appendChild(econfirm);
+return econfirm;
+}
+function confirmNew(txt){
+    if(phone){
+return phnconfirm(txt);
+    }
+    else{
+        return confirm(txt);
+    }
+}
+function hidephnconfirm() {
+
+    if (document.querySelector("#confirm") != null) {
+        document.querySelector("#confirm").remove();
+        document.querySelector("#iks_confirm > style").remove();
+    }
+}
+
+*/
 /* ---------------------------Hide------------------------ */
 function hider() {
     //if(!phone) {
