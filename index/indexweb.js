@@ -238,7 +238,7 @@ var syncDel = () => {
     }
   };
   xhttp.open("GET", outlink + "/updatedir", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.setRequestHeader("Content-Type", "application/json");
 
   xhttp.send(JSON.stringify({ token: localStorage.getItem('token') }));
 
