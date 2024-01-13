@@ -227,20 +227,24 @@ var get_blob2src = (dd) => {
 
 var syncDel = () => {
   snackbar("Updating");
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      cout(JSON.parse(this.responseText).done);
-
-      snackbar("Updated Data || "+JSON.parse(this.responseText).no);
-      //snackbar("Cleared");
-
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function () {
+  if (this.readyState === XMLHttpRequest.DONE) {
+    if (this.status == 200) {
+      //console.log(this.responseText);
+      // snackbar("Cleared");
+        snackbar("Updated Data || "+JSON.parse(this.responseText).no);
+    } else {
+      console.error("Request failed with status:", this.status);
     }
-  };
-  xhttp.open("GET", outlink + "/updatedir", true);
-  xhttp.setRequestHeader("Content-Type", "application/json");
+  }
+};
+
+xhttp.open("POST", outlink + "/updatedir", true);
+xhttp.setRequestHeader("Content-Type", "application/json");
 
   xhttp.send(JSON.stringify({ token: localStorage.getItem('token') }));
+  
 
 }
 function UnDeleteWeb() {
