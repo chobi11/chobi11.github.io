@@ -59,7 +59,7 @@ function deleteFile(path) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: 'Delete file',
+          message: 'Delete'+path,
           sha: data.sha,
         }),
       });
@@ -280,13 +280,7 @@ function UnDeleteWeb() {
       leftRightTrack = 1;
     }
     //upload(kkk.src.replace(gitlink,''),kkk.blob);
-    Promise.all([upload(kkk.src.replace(gitlink, ''), kkk.blob), deldeletedir(kkk.src.replace(gitlink, ''))])
-      .then(() => {
-        console.log("Both operations completed successfully.");
-      })
-      .catch(err => {
-        console.error("An error occurred:", err);
-      });
+    upload(kkk.src.replace(gitlink, ''), kkk.blob);
     //if (this.responseText == "done") {
 
     //}
@@ -324,7 +318,7 @@ var upload = (path, blob) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            message: 'Restore',
+            message: 'Restore'+path,
             content: fileContentBase64,
             sha: latestCommitSha,
             branch: branch,
@@ -400,13 +394,7 @@ var DeleteWeb = () => {
   }
 
   path = ssr.replace(gitlink, '');
-  Promise.all([deleteFile(path), add_del_dir(path)])
-    .then(() => {
-      console.log("Both operations completed successfully.");
-    })
-    .catch(err => {
-      console.error("An error occurred:", err);
-    });
+  deleteFile(path);
 
 
   // Fetch the image as a Blob
