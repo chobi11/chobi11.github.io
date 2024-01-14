@@ -234,6 +234,7 @@ xhttp.onreadystatechange = function () {
       //console.log(this.responseText);
       // snackbar("Cleared");
         snackbar("Updated Data || "+JSON.parse(this.responseText).no);
+        alert("Updated Data || "+JSON.parse(this.responseText).no);
     } else {
       console.error("Request failed with status:", this.status);
     }
