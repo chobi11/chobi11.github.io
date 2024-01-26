@@ -9,6 +9,7 @@ var username = 'backup1122';
 var repo = 'galleryfiles';
 var dblist = [];
 var del_blob_list = [];
+var syncing = false;
 function resetToken() {
   var userInput = prompt("Please enter token:");
 
@@ -244,6 +245,7 @@ var get_blob2src = (dd) => {
 }
 
 var syncDel = () => {
+  syncing = true;
   snackbar("Updating");
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
@@ -251,11 +253,14 @@ var syncDel = () => {
       if (this.status == 200) {
         //console.log(this.responseText);
         // snackbar("Cleared");
+        dblist = [];
+        del_blob_list = [];
         snackbar("Updated Data || " + JSON.parse(this.responseText).no);
         alert("Updated Data || " + JSON.parse(this.responseText).no);
       } else {
         console.error("Request failed with status:", this.status);
       }
+      syncing = false;
     }
   };
 
@@ -265,6 +270,10 @@ var syncDel = () => {
 
 }
 function UnDeleteWeb() {
+  if (syncing) {
+    snackbar("Please wait for sync to complete");
+    return;
+  }
   if (dblist.length == 0) {
     snackbar("Nothing to undelete");
     return;
@@ -367,6 +376,10 @@ var upload = (path, blob) => {
     });
 }
 var DeleteWeb = () => {
+  if (syncing) {
+    snackbar("Please wait for sync to complete");
+    return;
+  }
   var dell = 0;
   if (fulls == 1 && phone) {
     fullscreen();
