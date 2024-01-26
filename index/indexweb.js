@@ -13,28 +13,28 @@ function resetToken() {
   var userInput = prompt("Please enter token:");
 
   if (userInput !== null && userInput !== "") {
-      fetch("https://api.github.com/user", {
-          headers: {
-              Authorization: `Bearer ${userInput}`,
-          },
+    fetch("https://api.github.com/user", {
+      headers: {
+        Authorization: `Bearer ${userInput}`,
+      },
+    })
+      .then(response => {
+        if (response.ok) {
+          token = userInput;
+          localStorage.setItem('token', userInput);
+          snackbar('Token set');
+        } else {
+          snackbar("Invalid token");
+        }
       })
-          .then(response => {
-              if (response.ok) {
-                  token = userInput;
-                  localStorage.setItem('token', userInput);
-                  snackbar('Token set');
-              } else {
-                  snackbar("Invalid token");
-              }
-          })
-          .catch(error => {
-              snackbar("Error while checking GitHub token:");
-          });
+      .catch(error => {
+        snackbar("Error while checking GitHub token:");
+      });
 
 
 
   } else {
-      snackbar('no input');
+    snackbar('no input');
   }
 }
 function deleteFile(path) {
@@ -59,7 +59,7 @@ function deleteFile(path) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: 'Delete'+path,
+          message: 'Delete' + path,
           sha: data.sha,
         }),
       });
@@ -119,7 +119,8 @@ var deldeletedir = (ssr) => {
     });
 };
 
-function updateFile(path, updatedBlob) {
+function updateFile(path, resultBase64, src) {
+  var updatedBlob = dataURItoBlob(resultBase64);
   // Fetch the current content and details of the file
   fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
     method: 'GET',
@@ -150,13 +151,30 @@ function updateFile(path, updatedBlob) {
           .then(response => {
             console.log(response.status);
             if (response.status == 200) {
+              const imgr = document.querySelector("#full-image");
+              var psrc = imgr.attributes.src.value;
+              if (psrc == src) {
+                imgr.setAttribute('src', resultBase64);
+              }
+              //var nsrc = resultBase64;
+              if (src == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
+                document.querySelector("body > div.images > img:nth-child(" + now + ")").src = resultBase64;
+              }
+              DATA[DATA.indexOf(src)] = resultBase64;
+              track_blob(src, resultBase64);
               snackbar("Updated");
             }
-            if (response.status == 401) {
+            else if (response.status == 401) {
               snackbar("Auth Error");
             }
-            if (response.status == 422) {
+            else if (response.status == 422) {
               snackbar("Not Found");
+            }
+            else if (response.status == 409) {
+              snackbar("Conflict Please try again");
+            }
+            else {
+              snackbar("Error");
             }
           })
           .then(updatedFile => {
@@ -227,25 +245,23 @@ var get_blob2src = (dd) => {
 
 var syncDel = () => {
   snackbar("Updating");
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function () {
-  if (this.readyState === XMLHttpRequest.DONE) {
-    if (this.status == 200) {
-      //console.log(this.responseText);
-      // snackbar("Cleared");
-        snackbar("Updated Data || "+JSON.parse(this.responseText).no);
-        alert("Updated Data || "+JSON.parse(this.responseText).no);
-    } else {
-      console.error("Request failed with status:", this.status);
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState === XMLHttpRequest.DONE) {
+      if (this.status == 200) {
+        //console.log(this.responseText);
+        // snackbar("Cleared");
+        snackbar("Updated Data || " + JSON.parse(this.responseText).no);
+        alert("Updated Data || " + JSON.parse(this.responseText).no);
+      } else {
+        console.error("Request failed with status:", this.status);
+      }
     }
-  }
-};
+  };
 
-xhttp.open("POST", outlink + "/updatedir", true);
-xhttp.setRequestHeader("Content-Type", "application/json");
-
+  xhttp.open("POST", outlink + "/updatedir", true);
+  xhttp.setRequestHeader("Content-Type", "application/json");
   xhttp.send(JSON.stringify({ token: localStorage.getItem('token') }));
-  
 
 }
 function UnDeleteWeb() {
@@ -323,7 +339,7 @@ var upload = (path, blob) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            message: 'Restore'+path,
+            message: 'Restore' + path,
             content: fileContentBase64,
             sha: latestCommitSha,
             branch: branch,
@@ -586,16 +602,16 @@ var rotater = (deg, src) => {
   const imgr = document.querySelector("#full-image");
   var psrc = imgr.attributes.src.value;
   rotateweb(psrc, deg, function (resultBase64) {
-    imgr.setAttribute('src', resultBase64);
-    var nsrc = resultBase64;
-    if (psrc == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
-      document.querySelector("body > div.images > img:nth-child(" + now + ")").src = resultBase64;
-    }
-    DATA[parseInt(imgr.getAttribute('num'))] = resultBase64;
-    track_blob(psrc, nsrc);
+    //   imgr.setAttribute('src', resultBase64);
+    //   //var nsrc = resultBase64;
+    //   if (psrc == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
+    //     document.querySelector("body > div.images > img:nth-child(" + now + ")").src = resultBase64;
+    //   }
+    //   DATA[parseInt(imgr.getAttribute('num'))] = resultBase64;
+    //   track_blob(psrc, resultBase64);
     var path = src.replace(gitlink, '');
-    var updatedBlob = dataURItoBlob(resultBase64);
-    updateFile(path, updatedBlob);
+    //   var updatedBlob = dataURItoBlob(resultBase64);
+    updateFile(path, resultBase64, psrc);
   });
 }
 
