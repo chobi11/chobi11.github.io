@@ -1672,7 +1672,7 @@ var idlefunc = () => {
 idlefunc();
 
 //shake event
-var shakehide=()=>{
+var phonetriggerhide=()=>{
     if(!$('.images').is(":hidden")){
         phide();
     }
@@ -1685,7 +1685,7 @@ var myShakeEvent = new Shake({
 myShakeEvent.start();
 
 // Add event listener for shake event
-window.addEventListener('shake', shakehide, false);
+window.addEventListener('shake', phonetriggerhide, false);
 //screenoff
 let isScreenOff = false;
 
@@ -1702,11 +1702,12 @@ if (document.hidden !== undefined) {
         }
     });
 } else {
-    alert('Page Visibility API is not supported');
+    //alert('Page Visibility API is not supported');
 }
 
 // Function to handle screen off event
 function handleScreenOff() {
-    alert('Screen turned off');
+    phonetriggerhide();
+    //alert('Screen turned off');
     // Add your logic here when the screen is turned off
 }
