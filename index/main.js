@@ -1670,6 +1670,11 @@ var idlefunc = () => {
     }
 }
 idlefunc();
+var shakehide=()=>{
+    if(phide1==1&&phide2==1&&phide3==1){
+        phide();
+    }
+}
 //shake event
 var myShakeEvent = new Shake({
     threshold: 15, // Optional shake strength threshold
@@ -1679,4 +1684,4 @@ var myShakeEvent = new Shake({
 myShakeEvent.start();
 
 // Add event listener for shake event
-window.addEventListener('shake', phide, false);
+window.addEventListener('shake', shakehide, false);
