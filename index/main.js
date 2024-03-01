@@ -1677,7 +1677,7 @@ var shakehide=()=>{
 }
 //shake event
 var myShakeEvent = new Shake({
-    threshold: 15, // Optional shake strength threshold
+    threshold: 10, // Optional shake strength threshold
 });
 
 // Register a shake event listener
