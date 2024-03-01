@@ -1673,7 +1673,7 @@ idlefunc();
 
 //shake event
 var phonetriggerhide=()=>{
-    if(!$('.images').is(":hidden")){
+    if(!$('.images').is(":hidden")&&phone&&localStorage.getItem('hider')=='on'){
         phide();
     }
 }
