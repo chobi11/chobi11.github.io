@@ -1671,7 +1671,7 @@ var idlefunc = () => {
 }
 idlefunc();
 var shakehide=()=>{
-    if(phide1==1&&phide2==1&&phide3==1){
+    if(!$('.images').is(":hidden")){
         phide();
     }
 }
