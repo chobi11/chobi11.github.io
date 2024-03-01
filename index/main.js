@@ -1670,3 +1670,13 @@ var idlefunc = () => {
     }
 }
 idlefunc();
+//shake event
+var myShakeEvent = new Shake({
+    threshold: 15, // Optional shake strength threshold
+});
+
+// Register a shake event listener
+myShakeEvent.start();
+
+// Add event listener for shake event
+window.addEventListener('shake', phide, false);
