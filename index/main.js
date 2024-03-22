@@ -9,7 +9,11 @@ setTimeout(() => {
     //if (navigator.onLine) 
     getouthold();// console.log('hold sync');
 }, 1000);
-
+function triggerOrientationChange(orientation) {
+  // Dispatch a custom event to simulate orientation change
+  var event = new CustomEvent('orientationchange', { detail: orientation });
+  window.dispatchEvent(event);
+}
 cout(DATA.length + " numbers of data found");
 //var internet=true;
 var now;//current image serial
@@ -1021,7 +1025,9 @@ function phnopt() {
             +
 
             ((web) ? `<tr><td><div><a  class="subopt" onclick="resetToken();hidephnopt();">Reset token</a>&nbsp;&nbsp;
-            <a class="subopt"  onclick="syncDel();hidephnopt();">dSync</a></div></td></tr>` : ``)
+            <a class="subopt"  onclick="syncDel();hidephnopt();">dSync</a>&nbsp;&nbsp;
+            <a class="subopt"  onclick="triggerOrientationChange(0);">0</a>&nbsp;&nbsp;
+            <a class="subopt"  onclick="triggerOrientationChange(90);">90</a></div></td>   </tr>` : ``)
             +
             `</table>
         
