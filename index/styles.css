@@ -329,13 +329,8 @@ img.phide {
     top: 40%;
 }
 .fullscreen {
-    top: 5em !important;
-    width: 1.5em !important;
-    filter: unset;
-    padding: unset;
-    border-radius: unset;
-    transition: unset;
-    right: unset;
+    right: 20em;
+    left: unset;
 }
 
 #snackbar {
