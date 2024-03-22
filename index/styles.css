@@ -347,10 +347,10 @@ img.opt {
     padding: 1em;
 }
 .subopt {
-    padding: .5em;
+    padding: .5em !important;
 }
 #iks_list div {
-    line-height: 2em;
+    line-height: 2em !important;
 }
 }
 .stop-scrolling {
