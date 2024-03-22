@@ -263,10 +263,12 @@ img.play.del {
 }
 .fullscreen {
     position: fixed;
-    top: 10em !important;
+    /*top: 10em !important;
+    left: 1em;*/
+    top: 55px;
+    right: 270px;
     width: 3em !important;
     z-index: 999999;
-    left: 1em;
     opacity: .6 !important;
     padding: 1em;
     margin-left: unset; 
@@ -358,7 +360,7 @@ img.opt {
 }
     img.play.del {
     right: 47.5%;
-    zoom: 1;
+    zoom: .5;
 }
 }
 .stop-scrolling {
