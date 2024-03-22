@@ -1007,7 +1007,10 @@ function phnopt() {
             + ((unholdf) ? `<a class="subopt"  onclick="unholdc();hidephnopt();">undo</a>&nbsp;
             <a class="subopt"  onclick="delholdl();hidephnopt();">delc</a>` : '') +
 
-            `</div></td></tr><tr><td><div>`
+            `</div></td></tr><tr><td><div>
+<a class="subopt"  onclick="playl();hidephnopt();">playl</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a class="subopt"  onclick="play();hidephnopt();">play</a>&nbsp;&nbsp;&nbsp;&nbsp;
+`
             + ((localStorage.getItem("col") != 1) ? `<a class="subopt"  onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
             + ((localStorage.getItem("col") != 2) ? `<a class="subopt"  onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
             + ((localStorage.getItem("col") != 3) ? `<a class="subopt"  onclick="ds('f');hidephnopt();">foreign</a>` : '')
