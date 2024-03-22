@@ -510,23 +510,23 @@ var getouthold = (flush = false) => {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      breaker: {
-        cout(this.responseText);
-        if (flush) {
+      //breaker: {
+        //cout(this.responseText);
+        //if (flush) {
           localStorage.setItem('holdl', this.responseText);
-          break breaker;
-        }
-        var res = JSON.parse(this.responseText);
-        res.forEach(function (obj) {
-          if (!(containsObject(obj, holded))) {
-            console.log(obj.now);
-            holded.push(obj);
-          }
-        });
-        localStorage.setItem('holdl', JSON.stringify(holded));
+          //break breaker;
+        //}
+      //   var res = JSON.parse(this.responseText);
+      //   res.forEach(function (obj) {
+      //     if (!(containsObject(obj, holded))) {
+      //       console.log(obj.now);
+      //       holded.push(obj);
+      //     }
+      //   });
+      //   localStorage.setItem('holdl', JSON.stringify(holded));
 
-        //DeleteAll(this.responseText);
-      }
+      //   //DeleteAll(this.responseText);
+      // }
     }
   };
   xhttp.open("GET", outlink + "/gethold", true);
