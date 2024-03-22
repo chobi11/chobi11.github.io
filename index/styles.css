@@ -165,7 +165,7 @@ img.play.del {
     top: 90%;
     z-index: 999999;
 }
-@media only screen and (min-width: 1001px){
+@media screen and (min-width: 1001px){
 
 .fullscreen:hover {
     
@@ -209,7 +209,7 @@ img.play.del {
 }
 }
 
-@media only screen and (max-width: 1000px){
+@media screen and (max-width: 1000px) and (orientation: portrait){
     
     .modal-content {
         width: 50%;
@@ -282,7 +282,7 @@ img.play.del {
     margin-bottom: unset;
 }
 }
-@media only screen and (max-height: 1000px) and (max-width: 1000px) {
+@media screen and (max-height: 1000px) and (orientation: landscape) {
 
     img#full-image {
     max-height: 100%;
