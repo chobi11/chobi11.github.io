@@ -281,6 +281,10 @@ img.play.del {
     margin-left: unset;
     margin-bottom: unset;
 }
+    img.play.del {
+    right: 47.5%;
+    zoom: 1.2;
+}
 }
 @media only screen and (max-height: 1000px) and (max-width: 1000px) {
 
@@ -351,6 +355,10 @@ img.opt {
 }
 #iks_list div {
     line-height: 2.8em !important;
+}
+    img.play.del {
+    right: 47.5%;
+    zoom: 1;
 }
 }
 .stop-scrolling {
