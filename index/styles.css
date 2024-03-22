@@ -283,6 +283,7 @@ img.play.del {
 }
 }
 @media only screen and (max-height: 1000px) and (max-width: 1000px) {
+
     img#full-image {
     max-height: 100%;
     min-height: 100%;
@@ -345,7 +346,12 @@ img.opt {
     width: 1.5em  !important;
     padding: 1em;
 }
-
+.subopt {
+    padding: .5em;
+}
+#iks_list div {
+    line-height: 2em;
+}
 }
 .stop-scrolling {
     height: 100%;
