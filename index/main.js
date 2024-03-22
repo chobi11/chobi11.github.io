@@ -11,8 +11,11 @@ setTimeout(() => {
 }, 1000);
 function triggerOrientationChange(orientation) {
   // Dispatch a custom event to simulate orientation change
-  var event = new CustomEvent('orientationchange', { detail: orientation });
-  window.dispatchEvent(event);
+  if(orientation=0){
+      screen.orientation.lock("portrait-primary")}
+    else{
+      screen.orientation.lock("landscape-primary")}
+    
 }
 cout(DATA.length + " numbers of data found");
 //var internet=true;
