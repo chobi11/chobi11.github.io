@@ -5,9 +5,10 @@ const cout = (a) => {
         console.log(a);
     }
 }
-setTimeout(() => {
-    if (navigator.onLine) getouthold(); console.log('hold sync');
-}, 1000);
+//setTimeout(() => {
+    //if (navigator.onLine) 
+    getouthold();// console.log('hold sync');
+//}, 1000);
 
 cout(DATA.length + " numbers of data found");
 //var internet=true;
@@ -906,8 +907,8 @@ function shortcut() {
         <tr><td><div>SA+X</div></td><td>Unhold From List.</td></tr>
         <tr><td><div>SA+C</div></td><td>Delete From Unhold List.</td></tr>
         <tr><td><div>SA+V</div></td><td>Unhold Current.</td></tr>
-        <tr><td><div>Flush Holdlist</div></td><td onclick="getouthold(true);"><div class="link">Flush</div></td></tr>
-        `+
+        
+        `+//<tr><td><div>Flush Holdlist</div></td><td onclick="getouthold(true);"><div class="link">Flush</div></td></tr>
                 ((!web) ? (`
         <tr><td><div>SA+Q</div></td><td>Refresh Image Collection.</td></tr>
         
