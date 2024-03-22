@@ -5,10 +5,10 @@ const cout = (a) => {
         console.log(a);
     }
 }
-//setTimeout(() => {
+setTimeout(() => {
     //if (navigator.onLine) 
     getouthold();// console.log('hold sync');
-//}, 1000);
+}, 1000);
 
 cout(DATA.length + " numbers of data found");
 //var internet=true;
