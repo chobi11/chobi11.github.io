@@ -14,7 +14,7 @@ function triggerOrientationChange(orientation) {
   if(orientation=0){
       screen.orientation.lock("portrait-primary")}
     else{
-      screen.orientation.lock("landscape-primary")}
+      screen.orientation.lock('landscape');}
     
 }
 cout(DATA.length + " numbers of data found");
