@@ -56,7 +56,8 @@ function resetToken() {
 //checkgit
 function deleteFile(repo,path) {
   console.log(path);
-
+  console.log(repo);
+console.log(`https://api.github.com/repos/${username}/${repo}/contents/${path}`);
   // Fetch the current content and details of the file
   const getFileDetails = fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
     method: 'GET',
