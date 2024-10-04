@@ -21,7 +21,9 @@ function extractRepoInfo(url) {
       if (match && match.length >= 4) {
           repoName = match[1] + '/' + match[2];
       }
+
   }
+  repoName = repoName.replace('chobi11/', '');
   return { fileName, repoName };
 }
 
