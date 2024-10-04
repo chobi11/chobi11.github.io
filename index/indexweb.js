@@ -3,13 +3,26 @@ var rotatef = true;
 //var outlink="https://glpy-api.herokuapp.com";
 var outlink = "https://gdpy.onrender.com";
 //var outlink='http://127.0.0.1:5000'
-var gitlink = 'https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
+//var gitlink = 'https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
 var token = localStorage.getItem('token');
-var username = 'backup1122';
-var repo = 'galleryfiles';
+var username = 'chobi11';
 var dblist = [];
 var del_blob_list = [];
 var syncing = false;
+function extractRepoInfo(url) {
+    // Extract file name
+    let fileName = url.substring(url.lastIndexOf('/') + 1);
+
+    // Extract repository name
+    let repoName = '';
+    const regex = /github\.com\/([^\/]+)\/([^\/]+)/;
+    const match = url.match(regex);
+    if (match && match.length >= 3) {
+        repoName = match[1] + '/' + match[2];
+    }
+
+    return { fileName, repoName };
+}
 function resetToken() {
   var userInput = prompt("Please enter token:");
 
@@ -38,7 +51,8 @@ function resetToken() {
     snackbar('no input');
   }
 }
-function deleteFile(path) {
+//checkgit
+function deleteFile(repo,path) {
   console.log(path);
 
   // Fetch the current content and details of the file
@@ -119,8 +133,8 @@ var deldeletedir = (ssr) => {
       console.error('Error adding directory:', error);
     });
 };
-
-function updateFile(path, resultBase64, src) {
+//checkgit
+function updateFile(repo,path, resultBase64, src) {
   var updatedBlob = dataURItoBlob(resultBase64);
   // Fetch the current content and details of the file
   fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
@@ -309,8 +323,8 @@ function UnDeleteWeb() {
       }
       leftRightTrack = 1;
     }
-    //upload(kkk.src.replace(gitlink,''),kkk.blob);
-    upload(kkk.src.replace(gitlink, ''), kkk.blob);
+    const { fileName, repoName } = extractRepoInfo(kkk.src);
+    upload(repoName,fileName, kkk.blob);
     //if (this.responseText == "done") {
 
     //}
@@ -320,8 +334,8 @@ function UnDeleteWeb() {
     cout('n');
   }
 }
-
-var upload = (path, blob) => {
+//checkgit
+var upload = (repo,path, blob) => {
   branch = 'master';
   fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`, {
     method: 'GET',
@@ -427,8 +441,8 @@ var DeleteWeb = () => {
     }
   }
 
-  path = ssr.replace(gitlink, '');
-  deleteFile(path);
+  const { fileName, repoName } = extractRepoInfo(ssr);
+  deleteFile(repoName,fileName);
 
 
   // Fetch the image as a Blob
@@ -622,9 +636,10 @@ var rotater = (deg, src) => {
     //   }
     //   DATA[parseInt(imgr.getAttribute('num'))] = resultBase64;
     //   track_blob(psrc, resultBase64);
-    var path = src.replace(gitlink, '');
+    const { fileName, repoName } = extractRepoInfo(src);
+    
     //   var updatedBlob = dataURItoBlob(resultBase64);
-    updateFile(path, resultBase64, psrc);
+    updateFile(repoName,fileName, resultBase64, psrc);
   });
 }
 
