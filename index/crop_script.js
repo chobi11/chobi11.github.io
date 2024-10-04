@@ -2,7 +2,7 @@
 var gitlink=parent.gitlink;
 var token = parent.token;
 var username = parent.username;
-var repo = parent.repo;
+//var repo = parent.repo;
 var blobtoDataURL = function (blob) {
     return new Promise((resolve, reject) => {
         var a = new FileReader();
@@ -13,7 +13,7 @@ var blobtoDataURL = function (blob) {
     })
 }
 
-function updateFile(path, updatedBlob) {
+function updateFile(repo,path, updatedBlob) {
   // Fetch the current content and details of the file
   fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
     method: 'GET',
@@ -113,9 +113,11 @@ function t(e) {
           
                           if (parent.web) {
                               // Display alert only for web (GitHub) saving
-                              path = imagesrc.replace(gitlink, '');
+                              //path = imagesrc.replace(gitlink, '');
+                              
+                              const { fileName, repoName } = parent.extractRepoInfo(imagesrc);
                               parent.croppedImage = e;
-                              updateFile(path, e);
+                              updateFile(repoName,fileName, e);
                           } else {
                               // Handle non-web saving (local server)
                               $.ajax('http://'+(new URL(document.URL)).hostname+':15656/func.php', {

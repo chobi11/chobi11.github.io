@@ -3,12 +3,12 @@
   var gitlink=parent.gitlink;
 var token = parent.token;
 var username = parent.username;
-var repo = parent.repo;
+//var repo = parent.repo;
 if(parent.phone){
   document.querySelector("#tools").style.zoom=2;
 }
 
-function updateFile(path, updatedBlob) {
+function updateFile(repo,path, updatedBlob) {
   // Fetch the current content and details of the file
   fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
     method: 'GET',
@@ -511,9 +511,10 @@ src = imagesrc;
           formData.append('form_key', window.FORM_KEY);
           
           if(parent.web){
-          path = imagesrc.replace(gitlink, '');
+          //path = imagesrc.replace(gitlink, '');
+          const { fileName, repoName } = parent.extractRepoInfo(imagesrc);
           parent.croppedImage = e;
-          updateFile(path, e);
+          updateFile(repoName, fileName, e);
           }
 
 else{
