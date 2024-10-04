@@ -10,19 +10,21 @@ var dblist = [];
 var del_blob_list = [];
 var syncing = false;
 function extractRepoInfo(url) {
-    // Extract file name
-    let fileName = url.substring(url.lastIndexOf('/') + 1);
+  // Extract file name
+  let fileName = url.substring(url.lastIndexOf('/') + 1);
 
-    // Extract repository name
-    let repoName = '';
-    const regex = /github\.com\/([^\/]+)\/([^\/]+)/;
-    const match = url.match(regex);
-    if (match && match.length >= 3) {
-        repoName = match[1] + '/' + match[2];
-    }
-
-    return { fileName, repoName };
+  // Extract repository name from raw.githubusercontent.com URLs
+  let repoName = '';
+  if (url.includes('raw.githubusercontent.com')) {
+      const regex = /raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)/;
+      const match = url.match(regex);
+      if (match && match.length >= 4) {
+          repoName = match[1] + '/' + match[2];
+      }
+  }
+  return { fileName, repoName };
 }
+
 function resetToken() {
   var userInput = prompt("Please enter token:");
 
