@@ -150,7 +150,7 @@ async function updateGitHubTextFile(repoOwner, repoName, filePath, newContent, c
           exportStr += 'let DATA = DATAd.concat(DATAf);\n';
           //update in github using updateFile(repo,path, updatedBlob)
           //updateFile('chobi11', 'dir.js', exportStr);
-          updateGitHubTextFile(username,'${username}.github.io', 'dir.js', exportStr, 'Update dir.js', token);
+          updateGitHubTextFile(username,username+'.github.io', 'dir.js', exportStr, 'Update dir.js', token);
 
 
 
