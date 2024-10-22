@@ -891,7 +891,7 @@ function shortcut() {
         <tr><td><div>Idle Timer(SA+K)</div></td><td onclick="idleTimerFunc();"><div class="link">`+ localStorage.getItem('idle') + `</div></td></tr>
         `+
         ((web) ? (`<tr><td><div>Reset Token</div></td><td onclick="resetToken();"><div class="link">Reset</div></td></tr>
-        <tr><td><div>Update Data</div></td><td onclick="syncDel();"><div class="link">Update</div></td></tr>
+        <tr><td><div>Update Data</div></td><td onclick="refreshGit();"><div class="link">Update</div></td></tr>
         `):``)
         +`
         <tr><td><div>left|n4</div>|<div>right|n6</div></td><td>Right|Left Image.</td></tr>
@@ -1024,7 +1024,7 @@ function phnopt() {
             +
 
             ((web) ? `<tr><td><div><a  class="subopt" onclick="resetToken();hidephnopt();">Reset token</a>&nbsp;&nbsp;
-            <a class="subopt"  onclick="syncDel();hidephnopt();">dSync</a></div></td>   </tr>` : ``)
+            <a class="subopt"  onclick="refreshGit();hidephnopt();">dSync</a></div></td>   </tr>` : ``)
             +
             `</table>
         

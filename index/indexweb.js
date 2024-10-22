@@ -5,10 +5,166 @@ var outlink = "https://gdpy.onrender.com";
 //var outlink='http://127.0.0.1:5000'
 //var gitlink = 'https://raw.githubusercontent.com/backup1122/galleryfiles/master/';
 var token = localStorage.getItem('token');
-var username = 'chobi11';
+var username = window.location.hostname.replace('.github.io', '');
 var dblist = [];
 var del_blob_list = [];
-var syncing = false;
+
+async function updateGitHubTextFile(repoOwner, repoName, filePath, newContent, commitMessage, token) {
+  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+  
+  // Step 1: Get the current file SHA (required for updating the file)
+  const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github.v3+json'
+      }
+  });
+
+  if (!response.ok) {
+      console.error('Error fetching file info:', response.statusText);
+      return;
+  }
+
+  const fileData = await response.json();
+  const sha = fileData.sha;
+
+  // Step 2: Update the file with new content
+  const updatedContent = btoa(newContent);  // Convert new content to base64
+
+  const updateResponse = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          message: commitMessage,
+          content: updatedContent,
+          sha: sha
+      })
+  });
+
+  if (!updateResponse.ok) {
+      console.error('Error updating file:', updateResponse.statusText);
+      return;
+  }
+
+  const updatedFileData = await updateResponse.json();
+  console.log('File updated successfully:', updatedFileData);
+}
+
+      // Function to get repository names excluding username.github.io
+      async function getRepoNames(username) {
+          let repos = [];
+          let page = 1;
+
+          while (true) {
+              const url = `https://api.github.com/users/${username}/repos?per_page=100&page=${page}`;
+              const response = await fetch(url, {
+                  headers: {
+                      'Authorization': `Bearer ${token}`
+                  }
+              });
+              const data = await response.json();
+
+              if (data.length === 0) break;
+
+              data.forEach(repo => {
+                  if (repo.name !== `${username}.github.io`) { // Exclude "username.github.io"
+                      repos.push(repo.name);
+                  }
+              });
+
+              page++;
+          }
+
+          return repos;
+      }
+
+      // Function to fetch repo data
+      async function fetchRepoData(repo) {
+          const url = `https://api.github.com/repos/${username}/${repo}/git/trees/master?recursive=1`;
+          try {
+              const response = await fetch(url, {
+                  headers: {
+                      'Authorization': `Bearer ${token}`
+                  }
+              });
+              const data = await response.json();
+              return { repo, data };
+          } catch (error) {
+              console.error(`Error fetching repository ${repo}:`, error);
+              return { repo, data: null };
+          }
+      }
+
+      // Function to update GitHub file
+      // Main function to orchestrate everything
+      async function refreshGit() {
+        snackbar('Updating Library');
+          let arrayf = [];
+      let arrayd = [];
+      let count_files = 0;
+          var repos =await getRepoNames(username);//['a-1', 'a-2'] ;//
+         // repos = repos.slice(0, 2);
+          console.log("No. of repos:", repos.length);
+
+
+          const repoDataPromises = repos.map(repo => fetchRepoData(repo));
+          const repoDataResults = await Promise.all(repoDataPromises);
+
+          let maindata = {};
+
+          // Process the fetched data
+          repoDataResults.forEach(({ repo, data }) => {
+              if (data && data.tree) {
+                  maindata[repo] = data.tree;
+                  count_files += data.tree.length;
+              } else {
+                  maindata[repo] = [];
+              }
+          });
+
+          // Populate arrayf and arrayd
+          repos.forEach(repo => {
+              const data = maindata[repo] || [];
+              console.log(`${repo}, ${data.length}`);
+              if (repo.startsWith('a') || repo.startsWith('b') || repo.startsWith('d')) {
+                  data.forEach(file => {
+                      arrayd.push(`${repo}/${file.path.replace('.jpg', '')}`);
+                  });
+              } else {
+                  data.forEach(file => {
+                      arrayf.push(`${repo}/${file.path.replace('.jpg', '')}`);
+                  });
+              }
+          });
+
+          // Construct JavaScript export string
+          let exportStr = `let DATAf = ${JSON.stringify(arrayf)};\n`;
+          exportStr += `let DATAd = ${JSON.stringify(arrayd)};\n`;
+          exportStr += 'DATAf = DATAf.map(item => { let parts = item.split("/"); return `https://raw.githubusercontent.com/chobi11/${parts[0]}/master/${parts[1]}.jpg`; });\n';
+          exportStr += 'DATAd = DATAd.map(item => { let parts = item.split("/"); return `https://raw.githubusercontent.com/chobi11/${parts[0]}/master/${parts[1]}.jpg`; });\n';
+          exportStr += 'let DATA = DATAd.concat(DATAf);\n';
+          //update in github using updateFile(repo,path, updatedBlob)
+          //updateFile('chobi11', 'dir.js', exportStr);
+          updateGitHubTextFile(username,'${username}.github.io', 'dir.js', exportStr, 'Update dir.js', token);
+
+
+
+
+          // Base64 encode the content
+          //const new_content_base64 = btoa(exportStr);
+
+          // Update the file on GitHub
+          //await updateGitFile(file_path, new_content_base64);
+
+          console.log(`Text successfully saved to dir.js with ${count_files} files processed.`);
+          snackbar('Library Updated');
+      }
+
 function extractRepoInfo(url) {
   // Extract file name
   let fileName = url.substring(url.lastIndexOf('/') + 1);
@@ -263,36 +419,9 @@ var get_blob2src = (dd) => {
   return dr;
 }
 
-var syncDel = () => {
-  syncing = true;
-  snackbar("Updating");
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE) {
-      if (this.status == 200) {
-        //console.log(this.responseText);
-        // snackbar("Cleared");
-        dblist = [];
-        del_blob_list = [];
-        snackbar("Updated Data || " + JSON.parse(this.responseText).no);
-        alert("Updated Data || " + JSON.parse(this.responseText).no);
-      } else {
-        console.error("Request failed with status:", this.status);
-      }
-      syncing = false;
-    }
-  };
 
-  xhttp.open("POST", outlink + "/updatedir", true);
-  xhttp.setRequestHeader("Content-Type", "application/json");
-  xhttp.send(JSON.stringify({ token: localStorage.getItem('token') }));
-
-}
 function UnDeleteWeb() {
-  if (syncing) {
-    snackbar("Please wait for sync to complete");
-    return;
-  }
+  
   if (dblist.length == 0) {
     snackbar("Nothing to undelete");
     return;
@@ -395,10 +524,7 @@ var upload = (repo,path, blob) => {
     });
 }
 var DeleteWeb = () => {
-  if (syncing) {
-    snackbar("Please wait for sync to complete");
-    return;
-  }
+  
   var dell = 0;
   if (fulls == 1 && phone) {
     fullscreen();
