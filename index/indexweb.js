@@ -10,6 +10,7 @@ var dblist = [];
 var del_blob_list = [];
 
 function refreshGit() {
+  snackbar("Updating Library");
   const url = 'https://script.google.com/macros/s/AKfycbypMaCwadszZJVRdzJaxe-r2VO5wBAci7BnLWRP1SMoJWF5-MzL-BIApu9mP_H8bHZhNw/exec?username=' + username + '&token=' + token;
 
   // Start the timer
