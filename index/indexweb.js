@@ -9,161 +9,32 @@ var username = window.location.hostname.replace('.github.io', '');
 var dblist = [];
 var del_blob_list = [];
 
-async function updateGitHubTextFile(repoOwner, repoName, filePath, newContent, commitMessage, token) {
-  const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-  
-  // Step 1: Get the current file SHA (required for updating the file)
-  const response = await fetch(apiUrl, {
-      method: 'GET',
-      headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/vnd.github.v3+json'
-      }
-  });
+function refreshGit() {
+  const url = 'https://script.google.com/macros/s/AKfycbypMaCwadszZJVRdzJaxe-r2VO5wBAci7BnLWRP1SMoJWF5-MzL-BIApu9mP_H8bHZhNw/exec?username=' + username + '&token=' + token;
 
-  if (!response.ok) {
-      console.error('Error fetching file info:', response.statusText);
-      return;
-  }
+  // Start the timer
+  const startTime = Date.now();  // Or use Date.now()
 
-  const fileData = await response.json();
-  const sha = fileData.sha;
+  fetch(url, {
+    method: 'GET',
+  })
+    .then(response => response.text())  // Use .json() if expecting JSON response
+    .then(data => {
+      // End the timer
+      const endTime = Date.now();  // Or use Date.now()
+      const executionTime = (endTime - startTime) / 1000;
 
-  // Step 2: Update the file with new content
-  const updatedContent = btoa(newContent);  // Convert new content to base64
+      // Display the execution time
+      console.log(`Execution time: ${executionTime} ms`);
 
-  const updateResponse = await fetch(apiUrl, {
-      method: 'PUT',
-      headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-          message: commitMessage,
-          content: updatedContent,
-          sha: sha
-      })
-  });
+      snackbar("Library Updated");
+      console.log(data);
+    })
+    .catch(error => {
+      console.error('Error with GET request:', error);
+    });
 
-  if (!updateResponse.ok) {
-      console.error('Error updating file:', updateResponse.statusText);
-      return;
-  }
-
-  const updatedFileData = await updateResponse.json();
-  console.log('File updated successfully:', updatedFileData);
 }
-
-      // Function to get repository names excluding username.github.io
-      async function getRepoNames(username) {
-          let repos = [];
-          let page = 1;
-
-          while (true) {
-              const url = `https://api.github.com/users/${username}/repos?per_page=100&page=${page}`;
-              const response = await fetch(url, {
-                  headers: {
-                      'Authorization': `Bearer ${token}`
-                  }
-              });
-              const data = await response.json();
-
-              if (data.length === 0) break;
-
-              data.forEach(repo => {
-                  if (repo.name !== `${username}.github.io`) { // Exclude "username.github.io"
-                      repos.push(repo.name);
-                  }
-              });
-
-              page++;
-          }
-
-          return repos;
-      }
-
-      // Function to fetch repo data
-      async function fetchRepoData(repo) {
-          const url = `https://api.github.com/repos/${username}/${repo}/git/trees/master?recursive=1`;
-          try {
-              const response = await fetch(url, {
-                  headers: {
-                      'Authorization': `Bearer ${token}`
-                  }
-              });
-              const data = await response.json();
-              return { repo, data };
-          } catch (error) {
-              console.error(`Error fetching repository ${repo}:`, error);
-              return { repo, data: null };
-          }
-      }
-
-      // Function to update GitHub file
-      // Main function to orchestrate everything
-      async function refreshGit() {
-        snackbar('Updating Library');
-          let arrayf = [];
-      let arrayd = [];
-      let count_files = 0;
-          var repos =await getRepoNames(username);//['a-1', 'a-2'] ;//
-         // repos = repos.slice(0, 2);
-          console.log("No. of repos:", repos.length);
-
-
-          const repoDataPromises = repos.map(repo => fetchRepoData(repo));
-          const repoDataResults = await Promise.all(repoDataPromises);
-
-          let maindata = {};
-
-          // Process the fetched data
-          repoDataResults.forEach(({ repo, data }) => {
-              if (data && data.tree) {
-                  maindata[repo] = data.tree;
-                  count_files += data.tree.length;
-              } else {
-                  maindata[repo] = [];
-              }
-          });
-
-          // Populate arrayf and arrayd
-          repos.forEach(repo => {
-              const data = maindata[repo] || [];
-              console.log(`${repo}, ${data.length}`);
-              if (repo.startsWith('a') || repo.startsWith('b') || repo.startsWith('d')) {
-                  data.forEach(file => {
-                      arrayd.push(`${repo}/${file.path.replace('.jpg', '')}`);
-                  });
-              } else {
-                  data.forEach(file => {
-                      arrayf.push(`${repo}/${file.path.replace('.jpg', '')}`);
-                  });
-              }
-          });
-
-          // Construct JavaScript export string
-          let exportStr = `let DATAf = ${JSON.stringify(arrayf)};\n`;
-          exportStr += `let DATAd = ${JSON.stringify(arrayd)};\n`;
-          exportStr += 'DATAf = DATAf.map(item => { let parts = item.split("/"); return `https://raw.githubusercontent.com/chobi11/${parts[0]}/master/${parts[1]}.jpg`; });\n';
-          exportStr += 'DATAd = DATAd.map(item => { let parts = item.split("/"); return `https://raw.githubusercontent.com/chobi11/${parts[0]}/master/${parts[1]}.jpg`; });\n';
-          exportStr += 'let DATA = DATAd.concat(DATAf);\n';
-          //update in github using updateFile(repo,path, updatedBlob)
-          //updateFile('chobi11', 'dir.js', exportStr);
-          updateGitHubTextFile(username,username+'.github.io', 'dir.js', exportStr, 'Update dir.js', token);
-
-
-
-
-          // Base64 encode the content
-          //const new_content_base64 = btoa(exportStr);
-
-          // Update the file on GitHub
-          //await updateGitFile(file_path, new_content_base64);
-
-          console.log(`Text successfully saved to dir.js with ${count_files} files processed.`);
-          snackbar('Library Updated');
-      }
 
 function extractRepoInfo(url) {
   // Extract file name
@@ -172,11 +43,11 @@ function extractRepoInfo(url) {
   // Extract repository name from raw.githubusercontent.com URLs
   let repoName = '';
   if (url.includes('raw.githubusercontent.com')) {
-      const regex = /raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)/;
-      const match = url.match(regex);
-      if (match && match.length >= 4) {
-          repoName = match[1] + '/' + match[2];
-      }
+    const regex = /raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)/;
+    const match = url.match(regex);
+    if (match && match.length >= 4) {
+      repoName = match[1] + '/' + match[2];
+    }
 
   }
   repoName = repoName.replace('chobi11/', '');
@@ -212,10 +83,10 @@ function resetToken() {
   }
 }
 //checkgit
-function deleteFile(repo,path) {
+function deleteFile(repo, path) {
   console.log(path);
   console.log(repo);
-console.log(`https://api.github.com/repos/${username}/${repo}/contents/${path}`);
+  console.log(`https://api.github.com/repos/${username}/${repo}/contents/${path}`);
   // Fetch the current content and details of the file
   const getFileDetails = fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
     method: 'GET',
@@ -295,7 +166,7 @@ var deldeletedir = (ssr) => {
     });
 };
 //checkgit
-function updateFile(repo,path, resultBase64, src) {
+function updateFile(repo, path, resultBase64, src) {
   var updatedBlob = dataURItoBlob(resultBase64);
   // Fetch the current content and details of the file
   fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
@@ -421,7 +292,7 @@ var get_blob2src = (dd) => {
 
 
 function UnDeleteWeb() {
-  
+
   if (dblist.length == 0) {
     snackbar("Nothing to undelete");
     return;
@@ -458,7 +329,7 @@ function UnDeleteWeb() {
       leftRightTrack = 1;
     }
     const { fileName, repoName } = extractRepoInfo(kkk.src);
-    upload(repoName,fileName, kkk.blob);
+    upload(repoName, fileName, kkk.blob);
     //if (this.responseText == "done") {
 
     //}
@@ -469,7 +340,7 @@ function UnDeleteWeb() {
   }
 }
 //checkgit
-var upload = (repo,path, blob) => {
+var upload = (repo, path, blob) => {
   branch = 'master';
   fetch(`https://api.github.com/repos/${username}/${repo}/git/ref/heads/${branch}`, {
     method: 'GET',
@@ -524,7 +395,7 @@ var upload = (repo,path, blob) => {
     });
 }
 var DeleteWeb = () => {
-  
+
   var dell = 0;
   if (fulls == 1 && phone) {
     fullscreen();
@@ -573,7 +444,7 @@ var DeleteWeb = () => {
   }
 
   const { fileName, repoName } = extractRepoInfo(ssr);
-  deleteFile(repoName,fileName);
+  deleteFile(repoName, fileName);
 
 
   // Fetch the image as a Blob
@@ -656,11 +527,11 @@ var getouthold = (flush = false) => {
   xhttp.onreadystatechange = function () {
     if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
       //breaker: {
-        //cout(this.responseText);
-        //if (flush) {
-          localStorage.setItem('holdl', this.responseText);
-          //break breaker;
-        //}
+      //cout(this.responseText);
+      //if (flush) {
+      localStorage.setItem('holdl', this.responseText);
+      //break breaker;
+      //}
       //   var res = JSON.parse(this.responseText);
       //   res.forEach(function (obj) {
       //     if (!(containsObject(obj, holded))) {
@@ -768,9 +639,9 @@ var rotater = (deg, src) => {
     //   DATA[parseInt(imgr.getAttribute('num'))] = resultBase64;
     //   track_blob(psrc, resultBase64);
     const { fileName, repoName } = extractRepoInfo(src);
-    
+
     //   var updatedBlob = dataURItoBlob(resultBase64);
-    updateFile(repoName,fileName, resultBase64, psrc);
+    updateFile(repoName, fileName, resultBase64, psrc);
   });
 }
 
