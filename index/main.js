@@ -684,7 +684,7 @@ var close_cropedit = (f = 200) => {
 function fullscreen() {
     var elem = document.querySelector("body");//document.querySelector("#image-viewer"); //FULL screen
     if (fulls == 0) {
-        document.querySelector("#image-viewer > img.fullscreen").src = "./index/short.bmp";
+        document.querySelector("#image-viewer > img.fullscreen").src = "./index/img/short.bmp";
         if (elem.requestFullscreen) {
             elem.requestFullscreen();
         } else if (elem.webkitRequestFullscreen) { /* Safari */
@@ -701,7 +701,7 @@ function fullscreen() {
         // if(phone){
         //     document.querySelector("#image-viewer > img.fullscreen-m").setAttribute('class','fullscreen');
         // }
-        document.querySelector("#image-viewer > img.fullscreen").src = "./index/full.bmp";
+        document.querySelector("#image-viewer > img.fullscreen").src = "./index/img/full.bmp";
         document.exitFullscreen();
         snackbar('Fullscreen Off');
         fulls = 0;
@@ -721,14 +721,14 @@ function play() {
         if (playls == 1) {
             playl();
         }
-        document.querySelector("#image-viewer > img.play").src = "./index/pause.bmp";
+        document.querySelector("#image-viewer > img.play").src = "./index/img/pause.bmp";
         plays = 1;
         timer = setInterval(() => {
             right();
         }, 3000);
 
     } else {
-        document.querySelector("#image-viewer > img.play").src = "./index/play.bmp";
+        document.querySelector("#image-viewer > img.play").src = "./index/img/play.bmp";
         clearInterval(timer);
         plays = 0;
     }
@@ -740,7 +740,7 @@ function playl() {
         if (plays == 1) {
             play();
         }
-        document.querySelector("#image-viewer > img.playl").src = "./index/pause.bmp";
+        document.querySelector("#image-viewer > img.playl").src = "./index/img/pause.bmp";
         playls = 1;
         timer = setInterval(() => {
             if (leftRightTrack == 0) {
@@ -752,7 +752,7 @@ function playl() {
         }, 3000);
 
     } else {
-        document.querySelector("#image-viewer > img.playl").src = "./index/play.bmp";
+        document.querySelector("#image-viewer > img.playl").src = "./index/img/play.bmp";
         clearInterval(timer);
         playls = 0;
     }
