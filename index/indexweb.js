@@ -55,8 +55,20 @@ function extractRepoInfo(url) {
   return { fileName, repoName };
 }
 
+
+function encryptMessage(message, key) {
+  return CryptoJS.AES.encrypt(message, key).toString();
+}
+
+// Decryption function
+function decryptMessage(encryptedMessage, key) {
+  const bytes = CryptoJS.AES.decrypt(encryptedMessage, key);
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
+var tk='U2FsdGVkX19LDqbPy0IpLheD3K8KesqRpnEH9hsuKK5joQttnseLbe3ZRjp2PeLimm9hkfrNN2Me/SY6b78OBg==';
 function resetToken() {
-  var userInput = prompt("Please enter token:");
+  var key = prompt("Please enter key:");
+  var userInput=decryptMessage(tk,key);
 
   if (userInput !== null && userInput !== "") {
     fetch("https://api.github.com/user", {
