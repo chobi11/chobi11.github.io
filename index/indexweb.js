@@ -92,7 +92,7 @@ function resetToken() {
 
 
   } else {
-    snackbar('no input');
+    snackbar('Invalid key');
   }
 }
 //checkgit
