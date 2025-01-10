@@ -8,9 +8,14 @@ var token = localStorage.getItem('token');
 var username = window.location.hostname.replace('.github.io', '');
 var dblist = [];
 var del_blob_list = [];
-
+function tokenCheck() {
+  if (localStorage.token == undefined) {
+    resetToken();
+  }
+}
 function refreshGit() {
   snackbar("Updating Library");
+  tokenCheck();
   const url = 'https://script.google.com/macros/s/AKfycbypMaCwadszZJVRdzJaxe-r2VO5wBAci7BnLWRP1SMoJWF5-MzL-BIApu9mP_H8bHZhNw/exec?username=' + username + '&token=' + token;
 
   // Start the timer

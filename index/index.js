@@ -15,6 +15,7 @@ function UnDelete() {
   
   if (web) {
     cout("on web");
+    tokenCheck();
     UnDeleteWeb();
     return;
   }
@@ -104,6 +105,7 @@ function UnDelete() {
 function Delete() {
   if (web) {
     cout("on web");
+    tokenCheck();
     DeleteWeb();
     return;
   }
@@ -196,6 +198,7 @@ function rotate(deg = 90) {
   playstop();
   if (web) {
     cout("on web");
+    tokenCheck();
     rotateWeb(deg);
     return;
   }
