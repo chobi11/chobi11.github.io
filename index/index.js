@@ -11,11 +11,11 @@ Array.prototype.insert = function (index, ...items) {
   this.splice(index, 0, ...items);
 };
 
-function UnDelete() {
+async function UnDelete() {
   
   if (web) {
     cout("on web");
-    tokenCheck();
+    await tokenCheck();
     UnDeleteWeb();
     return;
   }
@@ -102,10 +102,10 @@ function UnDelete() {
   }
 }
 
-function Delete() {
+async function Delete() {
   if (web) {
     cout("on web");
-    tokenCheck();
+    await tokenCheck();
     DeleteWeb();
     return;
   }
@@ -193,12 +193,12 @@ function Delete() {
 
 
 
-function rotate(deg = 90) {
+async function rotate(deg = 90) {
 
   playstop();
   if (web) {
     cout("on web");
-    tokenCheck();
+    await tokenCheck();
     rotateWeb(deg);
     return;
   }

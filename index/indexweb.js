@@ -8,14 +8,45 @@ var token = localStorage.getItem('token');
 var username = window.location.hostname.replace('.github.io', '');
 var dblist = [];
 var del_blob_list = [];
-function tokenCheck() {
-  if (localStorage.token == undefined) {
-    resetToken();
+async function tokenCheck() {
+  if (!localStorage.getItem('token')) {
+    await resetToken();
   }
 }
-function refreshGit() {
+var tk='U2FsdGVkX19LDqbPy0IpLheD3K8KesqRpnEH9hsuKK5joQttnseLbe3ZRjp2PeLimm9hkfrNN2Me/SY6b78OBg==';
+async function resetToken() {
+  const key = prompt("Please enter the decryption key:");
+  if (!key) {
+    snackbar('Key cannot be empty.');
+    return;
+  }
+
+  try {
+    const userInput = decryptMessage(tk, key);
+    if (!userInput) {
+      snackbar('Invalid key or decryption failed.');
+      return;
+    }
+
+    const response = await fetch("https://api.github.com/user", {
+      headers: {
+        Authorization: `Bearer ${userInput}`,
+      },
+    });
+
+    if (response.ok) {
+      localStorage.setItem('token', userInput);
+      snackbar('Token has been set successfully.');
+    } else {
+      snackbar('Invalid token. Please try again.');
+    }
+  } catch (error) {
+    snackbar('Error while validating the GitHub token: ' + error.message);
+  }
+}
+async function refreshGit() {
   snackbar("Updating Library");
-  tokenCheck();
+  await tokenCheck();
   const url = 'https://script.google.com/macros/s/AKfycbypMaCwadszZJVRdzJaxe-r2VO5wBAci7BnLWRP1SMoJWF5-MzL-BIApu9mP_H8bHZhNw/exec?username=' + username + '&token=' + token;
 
   // Start the timer
@@ -70,36 +101,7 @@ function decryptMessage(encryptedMessage, key) {
   const bytes = CryptoJS.AES.decrypt(encryptedMessage, key);
   return bytes.toString(CryptoJS.enc.Utf8);
 }
-var tk='U2FsdGVkX19LDqbPy0IpLheD3K8KesqRpnEH9hsuKK5joQttnseLbe3ZRjp2PeLimm9hkfrNN2Me/SY6b78OBg==';
-function resetToken() {
-  var key = prompt("Please enter key:");
-  var userInput=decryptMessage(tk,key);
 
-  if (userInput !== null && userInput !== "") {
-    fetch("https://api.github.com/user", {
-      headers: {
-        Authorization: `Bearer ${userInput}`,
-      },
-    })
-      .then(response => {
-        if (response.ok) {
-          token = userInput;
-          localStorage.setItem('token', userInput);
-          snackbar('Token set');
-        } else {
-          snackbar("Invalid token");
-        }
-      })
-      .catch(error => {
-        snackbar("Error while checking GitHub token:");
-      });
-
-
-
-  } else {
-    snackbar('Invalid key');
-  }
-}
 //checkgit
 function deleteFile(repo, path) {
   console.log(path);
