@@ -32,6 +32,7 @@ async function resetToken() {
 
     if (response.ok) {
       localStorage.setItem('token', userInput);
+      token=userInput;
       snackbar('Token has been set successfully.');
     } else {
       snackbar('Invalid token. Please try again.');
