@@ -15,7 +15,10 @@ async function UnDelete() {
   
   if (web) {
     cout("on web");
-    await tokenCheck();
+    if (!localStorage.getItem('token')) {
+      await resetToken();
+      return;
+    }
     UnDeleteWeb();
     return;
   }
@@ -105,7 +108,10 @@ async function UnDelete() {
 async function Delete() {
   if (web) {
     cout("on web");
-    await tokenCheck();
+    if (!localStorage.getItem('token')) {
+      await resetToken();
+      return;
+    }
     DeleteWeb();
     return;
   }
@@ -198,7 +204,10 @@ async function rotate(deg = 90) {
   playstop();
   if (web) {
     cout("on web");
-    await tokenCheck();
+    if (!localStorage.getItem('token')) {
+      await resetToken();
+      return;
+    }
     rotateWeb(deg);
     return;
   }

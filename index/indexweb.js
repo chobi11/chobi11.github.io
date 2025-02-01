@@ -8,11 +8,7 @@ var token = localStorage.getItem('token');
 var username = window.location.hostname.replace('.github.io', '');
 var dblist = [];
 var del_blob_list = [];
-async function tokenCheck() {
-  if (!localStorage.getItem('token')) {
-    await resetToken();
-  }
-}
+
 var tk='U2FsdGVkX19LDqbPy0IpLheD3K8KesqRpnEH9hsuKK5joQttnseLbe3ZRjp2PeLimm9hkfrNN2Me/SY6b78OBg==';
 async function resetToken() {
   const key = prompt("Please enter the decryption key:");
@@ -46,7 +42,10 @@ async function resetToken() {
 }
 async function refreshGit() {
   snackbar("Updating Library");
-  await tokenCheck();
+  if (!localStorage.getItem('token')) {
+    await resetToken();
+    return;
+  }
   const url = 'https://script.google.com/macros/s/AKfycbypMaCwadszZJVRdzJaxe-r2VO5wBAci7BnLWRP1SMoJWF5-MzL-BIApu9mP_H8bHZhNw/exec?username=' + username + '&token=' + token;
 
   // Start the timer

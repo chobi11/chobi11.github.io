@@ -615,7 +615,10 @@ function idleTimerFunc() {
 var cropeditfunc =async (a) => {
 
     playstop();
-    await tokenCheck();
+    if (!localStorage.getItem('token')) {
+        await resetToken();
+        return;
+      }
     if (document.querySelector("body > iframe") !== null) {
         document.querySelector("body > iframe").remove();
         clearInterval(cropeditinterval);
