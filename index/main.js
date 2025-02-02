@@ -64,6 +64,8 @@ function holdApi(action, url = null) {
                 if (action === "get") {
                     // Do something with the JSON data
                     var data = JSON.parse(xhr.responseText);
+                    //foreach in data add "https://raw.githubusercontent.com/chobi11/" to each item
+                    data = data.map((item) => "https://raw.githubusercontent.com/" + username + item);
                     holdl = data;
                     clearInterval(holdInterval);
                 }
