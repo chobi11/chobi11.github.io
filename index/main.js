@@ -70,11 +70,11 @@ function holdApi(action, url = null) {
                     clearInterval(holdInterval);
                 }
                 if (action === "add") {
-                    console.log("URL added successfully");
+                    snackbar("Added successfully");
                     holdl.push(url);
                 }
                 if (action === "delete") {
-                    console.log("URL deleted successfully");
+                    snackbar("Deleted successfully");
                     holdl = holdl.filter((item) => item !== url);
                 }
             } else {
