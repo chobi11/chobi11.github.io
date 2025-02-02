@@ -60,7 +60,7 @@ function holdApi(action, url = null) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-                console.log("Response:", xhr.responseText);
+                cout("Response:", xhr.responseText);
                 if (action === "get") {
                     // Do something with the JSON data
                     var data = JSON.parse(xhr.responseText);
