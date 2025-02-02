@@ -499,78 +499,8 @@ var DeleteWeb = () => {
 //   xhttp.send();
 
 // }
-var addouthold = () => {
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      cout(JSON.parse(this.responseText).done);
-      console.log(JSON.parse(this.responseText).done);
-      snackbar(JSON.parse(this.responseText).done);
 
-    }
-  };
-  xhttp.open("POST", outlink + "/addhold", true);
-  xhttp.setRequestHeader("Content-type", "application/json");
-
-  xhttp.send(JSON.stringify({ hold: JSON.parse(localStorage.getItem('holdlself')) }));
-
-}
-var delouthold = (a) => {
-
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      cout(JSON.parse(this.responseText).done);
-      console.log(JSON.parse(this.responseText).done);
-      snackbar(JSON.parse(this.responseText).done);
-
-    }
-  };
-  xhttp.open("POST", outlink + "/delhold", true);
-  xhttp.setRequestHeader("Content-type", "application/json");
-
-  xhttp.send(JSON.stringify({ hold: a }));
-
-}
-function containsObject(obj, list) {
-  var res = _.find(list, function (val) { return _.isEqual(obj, val) });
-  return (_.isObject(res)) ? true : false;
-}
-var getouthold = (flush = false) => {
-  var holded = JSON.parse(localStorage.getItem('holdl'));
-  if (holded == null) {
-    holded = [];
-    localStorage.setItem('holdl', JSON.stringify(holded));
-  }
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function () {
-    if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
-      //breaker: {
-      //cout(this.responseText);
-      //if (flush) {
-      localStorage.setItem('holdl', this.responseText);
-      //break breaker;
-      //}
-      //   var res = JSON.parse(this.responseText);
-      //   res.forEach(function (obj) {
-      //     if (!(containsObject(obj, holded))) {
-      //       console.log(obj.now);
-      //       holded.push(obj);
-      //     }
-      //   });
-      //   localStorage.setItem('holdl', JSON.stringify(holded));
-
-      //   //DeleteAll(this.responseText);
-      // }
-    }
-  };
-  xhttp.open("GET", outlink + "/gethold", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-  xhttp.send();
-
-}
 
 // var getoutrotatedir = () => {
 //   var xhttp = new XMLHttpRequest();

@@ -5,19 +5,15 @@ const cout = (a) => {
         console.log(a);
     }
 }
-setTimeout(() => {
-    //if (navigator.onLine) 
-    getouthold();// console.log('hold sync');
-}, 1000);
+
 
 cout(DATA.length + " numbers of data found");
 //var internet=true;
 var now;//current image serial
 var err = ['499 Client Closed Request', '444 No Response', '405 Method Not Allowed', '412 Precondition Failed', '421 Misdirected Request', '424 Failed Dependency', '426 Upgrade Required', '431 Request Header Fields Too Large', '501  Not Implemented', '416 Range Not Satisfiable', '599 Network Connect Timeout Error', '530 Site is frozen', '498 Invalid Token', '419 Page Expired', '505 HTTP Version Not Supported', '504 Gateway Timeout', '503 Service Unavailable', '502 Bad Gateway', '500 Internal Server Error', '429 Too Many Requests', '428 Precondition Required', '421 Misdirected Request', '400 Bad Request', '424 Failed Dependency', '401 Unauthorized', '403 Forbidden', '404 Not Found', '511 Network Authentication Required', '417 Expectation Failed', '408 Request Timeout', '415 Unsupported Media Type'];
 var a;
-var hi;//hold serial
 var cropeditval;//value of crop edit image
-var hc = false;//hld current
+
 var cropeditinterval;
 var col = 1;
 var big = 0;
@@ -36,9 +32,115 @@ var playls = 0;
 var panelem;
 var aaudio = 0;
 var phone = false;
-var unholdf = false;
 var thresholdtime = +new Date();
 thresholdtime = thresholdtime + 180000;
+var hi;//hold serial
+var hc = false;//hld current
+var unholdf = false;
+var holdl = [];
+
+var holdInterval=setInterval(() => {
+    holdApi("get");
+}, 3000);
+
+
+
+function holdApi(action, url = null) {
+    var scriptUrl = "https://script.google.com/macros/s/AKfycby1JjEdkz15qy_6S8Fr6V19pTa-BZsqblre8XVCEpfs6MyE3OFbSnZF5PITRhBLTZGfLA/exec"
+    const xhr = new XMLHttpRequest();
+    let apiUrl = scriptUrl+"?action=" + action;
+
+    if (url) {
+        nurl = url.replace('https://raw.githubusercontent.com/' + username, '');
+        apiUrl += "&url=" + encodeURIComponent(nurl);
+    }
+
+    xhr.open("GET", apiUrl, true);
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                console.log("Response:", xhr.responseText);
+                if (action === "get") {
+                    // Do something with the JSON data
+                    var data = JSON.parse(xhr.responseText);
+                    holdl = data;
+                    clearInterval(holdInterval);
+                }
+                if (action === "add") {
+                    console.log("URL added successfully");
+                    holdl.push(url);
+                }
+                if (action === "delete") {
+                    console.log("URL deleted successfully");
+                    holdl = holdl.filter((item) => item !== url);
+                }
+            } else {
+                console.error("Error:", xhr.status, xhr.statusText);
+            }
+        }
+    };
+
+    xhr.send();
+}
+
+// Example Usage:
+function hold() {
+    if (confirm("wanna hold?")) {
+
+        var tmp = document.querySelector("html").innerHTML;
+        localStorage.setItem('tmp', tmp); localStorage.setItem('cbig', big);
+        if (big == 1) {
+            tmpbig = $("#full-image").attr("src");
+            holdApi("add", tmpbig);
+
+        }
+        else {
+            snackbar("No image to hold");
+        }
+    }
+
+}
+function holdc() {
+    if (big == 1) {
+        tmpbig = $("#full-image").attr("src"); localStorage.setItem('tmpbigc', tmpbig);
+    }
+}
+function unholdc() {
+    if (big == 1) {
+        $("#full-image").attr("num", (DATA.indexOf(localStorage.getItem('tmpbigc'))));
+        $("#full-image").attr("src", localStorage.getItem('tmpbigc'));
+    }
+}
+function delholdl() {
+    if (typeof hi == 'undefined') {
+        snackbar("Didn't Unhold");
+        //return;
+    }
+    else {
+
+        if (confirm("wanna delete this hold?")) {
+            holdApi("delete", holdl[hi+1]);
+        }
+    }
+}
+function unholdl() {
+
+    if (holdl==null || holdl.length == 0) {
+        snackbar("nothing holding");
+        //return;
+    }
+    else {
+        if (big == 1) {
+            if (typeof hi == 'undefined' || hi == -1 || hc) { hi = holdl.length - 1; hc = false; }
+            if (!unholdf) { holdc(); unholdf = true; }
+            $("#full-image").attr("src", holdl[hi]);
+            $("#full-image").attr("num", ((DATA.indexOf(holdl[hi]))));
+            hi--;
+        }
+
+    }
+}
 if (localStorage.getItem('croprand') === null) { //set idle if not set
     localStorage.setItem('croprand', '[]');
 }
@@ -1405,194 +1507,14 @@ function childnum(elm) {
     return k; //return child num when clicked in jquery click
 }
 
-function hold() {
-    if (confirm("wanna hold?")) {
-        if (localStorage.getItem('holdl') == null) {
-            localStorage.setItem('holdl', '[]');
-            //return;
-        }
-        if (localStorage.getItem('holdlself') == null) {
-            localStorage.setItem('holdlself', '[]');
-            //return;
-        }
-        var tmp = document.querySelector("html").innerHTML;
-        localStorage.setItem('tmp', tmp); localStorage.setItem('cbig', big);
-        if (big == 1) {
-            tmpbig = $("#full-image").attr("src");
-            var holdl = JSON.parse(localStorage.holdl);
-            holdl.push({ "tmpbig": tmpbig });
-            localStorage.setItem('holdl', JSON.stringify(holdl));
-            var holdlself = JSON.parse(localStorage.holdlself);
-            holdlself.push({ "tmpbig": tmpbig });
-            localStorage.setItem('holdlself', JSON.stringify(holdlself));
-            if (navigator.onLine) addouthold();
-            // tmpbig = $("#full-image").attr("src"); localStorage.setItem('tmpbig', tmpbig);
-            // tmpbnum = $("#full-image").attr("num"); localStorage.setItem('tmpnum', tmpbnum);
-            // localStorage.setItem('tmpnow', now);
-            // snackbar("Holding");
-            // var holdl = JSON.parse(localStorage.holdl);
-            // holdl.push({ "tmp": tmp, "now": now, "cbig": big.toString(), "tmpbig": tmpbig, "tmpbnum": tmpbnum });
-            // localStorage.setItem('holdl', JSON.stringify(holdl));
-            // var holdlself = JSON.parse(localStorage.holdlself);
-            // holdlself.push({ "tmp": tmp, "now": now, "cbig": big.toString(), "tmpbig": tmpbig, "tmpbnum": tmpbnum });
-            // localStorage.setItem('holdlself', JSON.stringify(holdlself));
-            // if (navigator.onLine) addouthold();
-        }
-        else {
-            snackbar("No image to hold");
-
-            // var holdl = JSON.parse(localStorage.holdl);
-            // holdl.push({ "tmp": tmp, "cbig": big.toString() });
-            // localStorage.setItem('holdl', JSON.stringify(holdl));
-            // var holdlself = JSON.parse(localStorage.holdlself);
-            // holdlself.push({ "tmp": tmp, "cbig": big.toString() });
-            // localStorage.setItem('holdlself', JSON.stringify(holdlself));
-        }
-    }
-
-}
 
 
 
-function holdc() {
-    if (big == 1) {
-        tmpbig = $("#full-image").attr("src"); localStorage.setItem('tmpbigc', tmpbig);
-        //snackbar("Holding");
-    }
-    // var tmp = document.querySelector("html").innerHTML;
-    // localStorage.setItem('tmpc', tmp); localStorage.setItem('cbigc', big);
-    // localStorage.setItem('ctmpnow', now);
-    // if (big == 1) {
-    //     tmpbig = $("#full-image").attr("src"); localStorage.setItem('tmpbigc', tmpbig);
-    //     tmpbnum = $("#full-image").attr("num"); localStorage.setItem('tmpnumc', tmpbnum);
-    //     //snackbar("Holding");
-    // }
-
-}
-function unholdc() {
-    if (big == 1) {
-        $("#full-image").attr("num", (DATA.indexOf(localStorage.getItem('tmpbigc'))));
-        $("#full-image").attr("src", localStorage.getItem('tmpbigc'));
-    }
-    // //hi == undefined;
-    // hc = true;
-    // unholdf = false;
-    // document.querySelector("html").innerHTML = localStorage.getItem('tmpc');
-    // document.title = 'Gallery'; big = parseInt(localStorage.getItem('cbigc'));
-    // jq();
-    // now = parseInt(localStorage.getItem('ctmpnow'));
-    // if (phone) { cmobile(); }
-    // else {
-    //     $('#full-image').mousemove(function () {
-    //         showFoo(2000);
-    //     });
-    // }
-    // if (localStorage.getItem('cbigc') == '1') {
-    //     $('#image-viewer').show(); $("#full-image").attr("src", localStorage.getItem('tmpbigc'));
-    //     $("#full-image").attr("num", ((DATA.includes(localStorage.getItem('tmpbigc'))) ? (DATA.indexOf(localStorage.getItem('tmpbigc'))) : (localStorage.getItem('tmpnumc'))));
-    // }
-    // panner();
-    // //hi == undefined;
-    // console.log(hi);
-}
-function unhold() {
-    if (localStorage.getItem('tmp') == null) {
-        snackbar("nothing holding");
-        //return;
-    }
-    else {
-        unholdf = true;
-        holdc();
-        document.querySelector("html").innerHTML = localStorage.getItem('tmp');
-        document.title = 'Gallery'; big = parseInt(localStorage.getItem('cbig'));
-        jq();
-        now = parseInt(localStorage.getItem('tmpnow'));
-        if (phone) { cmobile(); }
-        else {
-            $('#full-image').mousemove(function () {
-                showFoo(2000);
-            });
-        }
-        if (localStorage.getItem('cbig') == '1') {
-            $('#image-viewer').show(); $("#full-image").attr("src", localStorage.getItem('tmpbig'));
-            $("#full-image").attr("num", ((DATA.includes(localStorage.getItem('tmpbig'))) ? (DATA.indexOf(localStorage.getItem('tmpbig'))) : (localStorage.getItem('tmpnum'))));
-        }
-        panner();
-    }
-
-}
-
-function delholdl() {
-    if (typeof hi == 'undefined') {
-        snackbar("Didn't Unhold");
-        //return;
-    }
-    else {
-        if (localStorage.getItem('holdl') == '[]' || localStorage.getItem('holdl') == null) {
-            snackbar("nothing holding");
-            //return;
-        }
-        else {
-            if (confirm("wanna delete this hold?")) {
-                var holdlist = JSON.parse(localStorage.getItem('holdl'));
-                if (navigator.onLine) delouthold(holdlist[hi + 1]);
-                console.log(1);
-
-                holdlist.splice(hi + 1, 1);
-                localStorage.setItem('holdl', JSON.stringify(holdlist));
-                var holdlselflist = JSON.parse(localStorage.getItem('holdlself'));
-                holdlselflist.splice(hi + 1, 1);
-                localStorage.setItem('holdlself', JSON.stringify(holdlselflist));
-
-            }
-
-        }
-    }
-}
-function unholdl() {
-
-    if (localStorage.getItem('holdl') == '[]' || localStorage.getItem('holdl') == null) {
-        snackbar("nothing holding");
-        //return;
-    }
-    else {
-        if (big == 1) {
-            var holdlist = JSON.parse(localStorage.getItem('holdl'));
-            if (typeof hi == 'undefined' || hi == -1 || hc) { hi = holdlist.length - 1; hc = false; }
-            if (!unholdf) { holdc(); unholdf = true; }
-            $("#full-image").attr("src", holdlist[hi].tmpbig);
-            //(DATA.includes(holdlist[hi].tmpbig))
-            $("#full-image").attr("num", ((DATA.indexOf(holdlist[hi].tmpbig))));
-
-            hi--;
-        }
 
 
-        // var holdlist = JSON.parse(localStorage.getItem('holdl'));
-        // if (typeof hi == 'undefined' || hi == -1 || hc) { hi = holdlist.length - 1; hc = false; }
-        // if (!unholdf) { holdc(); unholdf = true; }
 
-        // //holdc();
-        // //({ "tmp": tmp,"cbig":big.toString(), "tmpbig": tmpbig, "tmpbnum": tmpbnum });
-        // document.querySelector("html").innerHTML = holdlist[hi].tmp; //localStorage.getItem('tmp');
-        // document.title = 'Gallery'; big = parseInt(holdlist[hi].cbig);//localStorage.getItem('cbig'));
-        // jq();
-        // now = parseInt(holdlist[hi].now);
-        // if (phone) { cmobile(); }
-        // else {
-        //     $('#full-image').mousemove(function () {
-        //         showFoo(2000);
-        //     });
-        // }
-        // if (holdlist[hi].cbig == '1') {
-        //     $('#image-viewer').show(); $("#full-image").attr("src", holdlist[hi].tmpbig);
-        //     $("#full-image").attr("num", ((DATA.includes(holdlist[hi].tmpbig)) ? (DATA.indexOf(holdlist[hi].tmpbig)) : (holdlist[hi].tmpnum)));
-        // }
-        // hi--;
-        // panner();
-        // jq();
-    }
-}
+
+
 
 
 /*window.addEventListener('wheel', function(event)
