@@ -47,7 +47,7 @@ function updateFile(repo,path, updatedBlob) {
             if (response.status==422) {
                 snackbar("Not Found");
             }*/
-            parent.close_cropedit(response.status);
+            parent.close_cropedit(response.status,parent.cropeditval.nowsame_CE);
         })
           .then(updatedFile => {
             //snackbar("Updated");
@@ -523,7 +523,7 @@ else{
             if (this.readyState === XMLHttpRequest.DONE && this.status == 200) {
               console.log(this.responseText);
               console.log('done');
-              parent.close_cropedit();
+              parent.close_cropedit(200,parent.cropeditval.nowsame_CE);
             }
           };
         

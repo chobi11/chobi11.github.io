@@ -52,7 +52,7 @@ function updateFile(repo,path, updatedBlob) {
             if (response.status==422) {
                 snackbar("Not Found");
             }*/
-            parent.close_cropedit(response.status);
+            parent.close_cropedit(response.status,parent.cropeditval.nowsame_CE);
         })
           .then(updatedFile => {
             //snackbar("Updated");
@@ -127,7 +127,7 @@ function t(e) {
                                   contentType: false,
                                   success: function (data) {
                                       //console.log(data);
-                                      parent.close_cropedit();
+                                      parent.close_cropedit(200,parent.cropeditval.nowsame_CE);
                                   },
                                   error: function (data) {
                                       console.log(data);

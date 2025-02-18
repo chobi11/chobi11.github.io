@@ -729,6 +729,12 @@ var cropeditfunc =async (a) => {
     }
     else {
         if (big == 1) {
+            if (document.querySelector("#full-image").src == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
+                nowsame_crop_edit = 1;//not changed
+              }
+              else{
+                nowsame_crop_edit = 0;//changed
+                }
             var src = document.querySelector("#full-image").getAttribute("src");
             var msrc = get_blob2src(src);
             if (msrc != "") {
@@ -739,7 +745,7 @@ var cropeditfunc =async (a) => {
             }
             console.log(ssr);
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + DATA[anum]), web: web, phone: phone, blob_url: DATA[anum] } : { val: ((web) ? ssr : '.' + DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone, blob_url: DATA[anum] };
+            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + DATA[anum]), web: web, phone: phone, blob_url: DATA[anum],nowsame_CE:nowsame_crop_edit } : { val: ((web) ? ssr : '.' + DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone,nowsame_CE:nowsame_crop_edit, blob_url: DATA[anum] };
             var ifrm = document.createElement("iframe");
             console.log((((new URL(document.URL)).hostname.includes('localhost') ? "http://localhost:5656/index/" : (new URL(document.URL)).hostname + "/index/")) + a + ".html");
             ifrm.setAttribute("src", ((document.URL.includes('5656') ? "http://" + (new URL(document.URL)).hostname + ":5656/index/" : 'https://' + (new URL(document.URL)).hostname + "/index/")) + a + ".html");
@@ -766,7 +772,7 @@ var timeremove = (ssr) => {
     }
 }
 
-var close_cropedit = (f = 200) => {
+var close_cropedit = (f = 200,nowsame_CE_val=0) => {
     //console.log('calling here');
     document.querySelector("body > iframe").remove();
     if (f == 200) {
@@ -778,6 +784,10 @@ var close_cropedit = (f = 200) => {
             track_blob(cropeditval.blob_url, DATA[anum]);
         }
         document.querySelector("#full-image").src = DATA[anum];
+        if (nowsame_CE_val == 1) {
+            document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
+            //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
+          }
     }
     else if (f == 401) {
         snackbar("Auth Error");
