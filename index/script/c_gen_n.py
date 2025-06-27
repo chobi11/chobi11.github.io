@@ -1,6 +1,6 @@
 import json
 import os
-fileName="nnn.txt"
+fileName="../extra/cn.txt"
 #date = "date > datetime(2024, 2, 8, 23, 59, 59, 999999) and "
 #date = ""
 # Read 'on' variable from file.json
@@ -20,7 +20,7 @@ k = 1
 for i in range(len(on)):
     str_var += " " + on[i]
     #print(i)
-    if i != 0 and i % 10 == 0:  
+    if i != 0 and i % 1 == 0:  
         print(f"{k}.bat")
         save(f"{k}.bat", f'gallery-dl --filter "extension not in (\'mp4\', \'gif\', \'m4v\', \'mp3\')" {str_var}')
         str_var = ""
