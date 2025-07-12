@@ -139,6 +139,9 @@ function unholdl() {
             $("#full-image").attr("src", holdl[hi]);
             $("#full-image").attr("num", ((DATA.indexOf(holdl[hi]))));
             hi--;
+            if (!hi < 0) {
+                loadimg([DATA[DATA.indexOf(holdl[hi])]]);
+            }
         }
 
     }
