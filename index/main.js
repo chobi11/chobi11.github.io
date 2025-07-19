@@ -38,8 +38,12 @@ var hi;//hold serial
 var hc = false;//hld current
 var unholdf = false;
 var holdl = [];
+var holdla = [];
+var holdld = [];
+var holdlf = [];
 
-var holdInterval=setInterval(() => {
+
+var holdInterval = setInterval(() => {
     holdApi("get");
 }, 3000);
 
@@ -48,7 +52,7 @@ var holdInterval=setInterval(() => {
 function holdApi(action, url = null) {
     var scriptUrl = "https://script.google.com/macros/s/AKfycby1JjEdkz15qy_6S8Fr6V19pTa-BZsqblre8XVCEpfs6MyE3OFbSnZF5PITRhBLTZGfLA/exec"
     const xhr = new XMLHttpRequest();
-    let apiUrl = scriptUrl+"?action=" + action;
+    let apiUrl = scriptUrl + "?action=" + action;
 
     if (url) {
         nurl = url.replace('https://raw.githubusercontent.com/' + username, '');
@@ -64,9 +68,24 @@ function holdApi(action, url = null) {
                 if (action === "get") {
                     // Do something with the JSON data
                     var data = JSON.parse(xhr.responseText);
-                    //foreach in data add "https://raw.githubusercontent.com/chobi11/" to each item
-                    data = data.map((item) => "https://raw.githubusercontent.com/" + username + item);
-                    holdl = data;
+                    holdla = data.map((item) => "https://raw.githubusercontent.com/" + username + item);
+                    holdld = data
+                        .filter(item => item.includes("/a-") || item.includes("/d-") || item.includes("/b-"))  // filters items containing 'a', 'd', or 'b'
+                        .map(item => "https://raw.githubusercontent.com/" + username + item);
+                    holdlf = data
+                        .filter(item => !item.includes("/a-") && !item.includes("/d-") && !item.includes("/b-"))  // Excludes items with 'a', 'd', or 'b'
+                        .map(item => "https://raw.githubusercontent.com/" + username + item);
+                    if (localStorage.getItem("col") == 1) {
+                        holdl = holdla;
+                    }
+                    else if (localStorage.getItem("col") == 2) {
+                        holdl = holdld;
+                    }
+                    else {
+                        holdl = holdlf;
+                    }
+                    
+
                     clearInterval(holdInterval);
                 }
                 if (action === "add") {
@@ -122,13 +141,13 @@ function delholdl() {
     else {
 
         if (confirm("wanna delete this hold?")) {
-            holdApi("delete", holdl[hi+1]);
+            holdApi("delete", holdl[hi + 1]);
         }
     }
 }
 function unholdl() {
 
-    if (holdl==null || holdl.length == 0) {
+    if (holdl == null || holdl.length == 0) {
         snackbar("nothing holding");
         //return;
     }
@@ -184,10 +203,10 @@ const devonoff = () => {
 
 function ds(s) {
 
-    if (s == 'f') { if ((localStorage.getItem("col") == 1 || localStorage.getItem("col") == 2)) { DATA = DATAf; len = DATA.length; reload(); localStorage.setItem("col", 3); } }
-    else if (s == 'd') { if ((localStorage.getItem("col") == 1 || localStorage.getItem("col") == 3)) { DATA = DATAd; len = DATA.length; reload(); localStorage.setItem("col", 2); } }
-    else { if ((localStorage.getItem("col") == 2 || localStorage.getItem("col") == 3)) { DATA = tmpDATA; len = DATA.length; reload(); localStorage.setItem("col", 1); } }
-    //if(localStorage.getItem('data')!=s){localStorage.setItem('data',s);location.reload();}
+    if (s == 'f') { if (localStorage.getItem("col") != 3) { DATA = DATAf; len = DATA.length; reload(); localStorage.setItem("col", 3);holdl=holdlf;hi = -1; } }
+    else if (s == 'd') { if (localStorage.getItem("col") != 2) { DATA = DATAd; len = DATA.length; reload(); localStorage.setItem("col", 2);holdl=holdld;hi = -1; } }
+    else { if (localStorage.getItem("col") !=1) { DATA = tmpDATA; len = DATA.length; reload(); localStorage.setItem("col", 1);holdl=holdla;hi = -1; } }
+    
 }
 let changesrc = (myImage, num, inc) => {
     const myRequest = new Request(DATA[num]);
@@ -467,7 +486,7 @@ if (!phone) {
 
         }
         //end hide
-        
+
         //start server work
         else if ( /*ev.ctrlKey &&*/ ev.shiftKey && ev.altKey && [46, 110, 220, 0].includes(ev.keyCode)) {
             //unhide(ev.keyCode);  
@@ -504,7 +523,7 @@ if (!phone) {
                 rotate(180);
             }
         }
-        else if (ev.shiftKey &&  ev.keyCode === 85) {
+        else if (ev.shiftKey && ev.keyCode === 85) {
             if (big == 1) {
                 rotate(270);
             }
@@ -719,13 +738,13 @@ function idleTimerFunc() {
     }
 }
 //console.log(localStorage.getItem('idle'));
-var cropeditfunc =async (a) => {
+var cropeditfunc = async (a) => {
 
     playstop();
     if (!localStorage.getItem('token')) {
         await resetToken();
         return;
-      }
+    }
     if (document.querySelector("body > iframe") !== null) {
         document.querySelector("body > iframe").remove();
         clearInterval(cropeditinterval);
@@ -734,10 +753,10 @@ var cropeditfunc =async (a) => {
         if (big == 1) {
             if (document.querySelector("#full-image").src == document.querySelector("body > div.images > img:nth-child(" + now + ")").src) {
                 nowsame_crop_edit = 1;//not changed
-              }
-              else{
+            }
+            else {
                 nowsame_crop_edit = 0;//changed
-                }
+            }
             var src = document.querySelector("#full-image").getAttribute("src");
             var msrc = get_blob2src(src);
             if (msrc != "") {
@@ -748,7 +767,7 @@ var cropeditfunc =async (a) => {
             }
             console.log(ssr);
             var anum = document.querySelector("#full-image").getAttribute('num');
-            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + DATA[anum]), web: web, phone: phone, blob_url: DATA[anum],nowsame_CE:nowsame_crop_edit } : { val: ((web) ? ssr : '.' + DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone,nowsame_CE:nowsame_crop_edit, blob_url: DATA[anum] };
+            cropeditval = (a == 'crop') ? { val: ((web) ? ssr : '.' + DATA[anum]), web: web, phone: phone, blob_url: DATA[anum], nowsame_CE: nowsame_crop_edit } : { val: ((web) ? ssr : '.' + DATA[anum]), height: document.querySelector("#full-image").naturalHeight, width: document.querySelector("#full-image").naturalWidth, web: web, phone: phone, nowsame_CE: nowsame_crop_edit, blob_url: DATA[anum] };
             var ifrm = document.createElement("iframe");
             console.log((((new URL(document.URL)).hostname.includes('localhost') ? "http://localhost:5656/index/" : (new URL(document.URL)).hostname + "/index/")) + a + ".html");
             ifrm.setAttribute("src", ((document.URL.includes('5656') ? "http://" + (new URL(document.URL)).hostname + ":5656/index/" : 'https://' + (new URL(document.URL)).hostname + "/index/")) + a + ".html");
@@ -775,7 +794,7 @@ var timeremove = (ssr) => {
     }
 }
 
-var close_cropedit = (f = 200,nowsame_CE_val=0) => {
+var close_cropedit = (f = 200, nowsame_CE_val = 0) => {
     //console.log('calling here');
     document.querySelector("body > iframe").remove();
     if (f == 200) {
@@ -790,7 +809,7 @@ var close_cropedit = (f = 200,nowsame_CE_val=0) => {
         if (nowsame_CE_val == 1) {
             document.querySelector("body > div.images > img:nth-child(" + now + ")").src = DATA[anum];
             //document.querySelector("body > div.images > img:nth-child("+now+")").setAttribute('num',anum)        
-          }
+        }
     }
     else if (f == 401) {
         snackbar("Auth Error");
@@ -1011,10 +1030,10 @@ function shortcut() {
         <tr><td><div>Hider (H)</div></td><td onclick="togglehider();"><div class="link">`+ h + `</div></td></tr>
         <tr><td><div>Idle Timer(SA+K)</div></td><td onclick="idleTimerFunc();"><div class="link">`+ localStorage.getItem('idle') + `</div></td></tr>
         `+
-        ((web) ? (`<tr><td><div>Reset Token</div></td><td onclick="resetToken();"><div class="link">Reset</div></td></tr>
+                ((web) ? (`<tr><td><div>Reset Token</div></td><td onclick="resetToken();"><div class="link">Reset</div></td></tr>
         <tr><td><div>Update Data</div></td><td onclick="refreshGit();"><div class="link">Update</div></td></tr>
-        `):``)
-        +`
+        `) : ``)
+                + `
         <tr><td><div>left|n4</div>|<div>right|n6</div></td><td>Right|Left Image.</td></tr>
         <tr><td><div>A|<|n1</div>|<div>D|>|n3</div></td><td>Right|Left Image(same folder).</td></tr>
         <tr><td><div>L|Bsp|Esc</div></td><td>Close Viewer.</td></tr>
@@ -1073,175 +1092,169 @@ function togglehider() {
         localStorage.setItem('hider', 'off');
     }
 }
-
 function phnopt() {
-
     var h = localStorage.getItem('hider');
 
-    if (document.querySelector("#help") == null && localStorage.getItem('hide1') != '0' && localStorage.getItem('hide') != '0') {
-        (eHelp = document.createElement("DIV")).id = "iks_help";
-        eHelp.innerHTML = `<style>
-        #iks_help{position:fixed;z-index:999999999;left:0;top:0;right:0;bottom:0;background:rgb(0,0,0,0.5);cursor:pointer;display: flex;align-items: center;}
-        .subopt{border: 2px solid #beaeae;padding: .8em;
-        }
-        #help{    position: fixed;
-    /* right: 0.5em;
-    /* bottom: 0.5em; 
-    top: 20%;*/
+    if (
+        document.querySelector("#help") == null &&
+        localStorage.getItem('hide1') != '0' &&
+        localStorage.getItem('hide') != '0'
+    ) {
+        let eHelp = document.createElement("DIV");
+        eHelp.id = "iks_help";
+        eHelp.innerHTML = `
+<style>
+#iks_help {
+    position: fixed;
+    z-index: 999999999;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.subopt {
+    border: 2px solid #beaeae;
+    padding: .8em;
+}
+#help {
+    position: fixed;
     border: 2px solid #000;
     border-radius: 0.5em;
     padding: 0.5em;
     background: #000;
     font-size: 11pt;
     line-height: normal;
-    width: 100%;}
-    table#iks_list {
     width: 100%;
 }
-        #iks_list tr:nth-child(2n+1){background:#eee}
-        #iks_list div{padding-right: 5px;
-    /* padding-left: 5px; */
-    /* display: inline-block; */
+table#iks_list {
+    width: 100%;
+}
+#iks_list tr:nth-child(2n+1) {
+    background: #eee;
+}
+#iks_list div {
+    padding-right: 5px;
     border: 1px solid #000;
     border-radius: 0.3em;
-    /* min-width: 2em; */
     background: #000;
     text-align: center;
     font-weight: bold;
     line-height: 3em;
-    color:white;
-    font-size: 3em;}
-    @media only screen and (max-height: 1000px) and (max-width: 1000px) {
-        #iks_list div {font-size: 1em;
-            line-height: 1.5em;
+    color: white;
+    font-size: 3em;
 }
+@media only screen and (max-height: 1000px) and (max-width: 1000px) {
+    #iks_list div {
+        font-size: 1em;
+        line-height: 1.5em;
     }
-    
-    
-        </style>
-        <div id="help">
-        <table id="iks_list">
-        <tr><td><div><a onclick="if(localStorage.getItem('hider')=='off'){localStorage.setItem('hider','on');
-    hider();}else{localStorage.setItem('hider','off');}">hider `+ localStorage.getItem('hider') + `</a></div></td></tr>
-        <tr><td><div><a class="subopt"  onclick="hold();hidephnopt();">hold</a>&nbsp;
-        <a class="subopt"  onclick="unholdl();hidephnopt();">unhold list</a>&nbsp;`
-            + ((unholdf) ? `<a class="subopt"  onclick="unholdc();hidephnopt();">undo</a>&nbsp;
-            <a class="subopt"  onclick="delholdl();hidephnopt();">delc</a>` : '') +
+}
+</style>
+<div id="help">
+    <table id="iks_list">
+        <tr>
+            <td>
+                <div>
+                    <a onclick="
+                        if(localStorage.getItem('hider') == 'off') {
+                            localStorage.setItem('hider', 'on');
+                            hider();
+                        } else {
+                            localStorage.setItem('hider', 'off');
+                        }
+                    ">
+                        hider ${localStorage.getItem('hider')}
+                    </a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    ${big == 1 ? `
+                        <a class="subopt" onclick="hold();hidephnopt();">hold</a>&nbsp;
+                        <a class="subopt" onclick="unholdl();hidephnopt();">unhold list</a>&nbsp;
+                    ` : ''}
+                    ${unholdf ? `
+                        <a class="subopt" onclick="unholdc();hidephnopt();">undo</a>&nbsp;
+                        <a class="subopt" onclick="delholdl();hidephnopt();">delc</a>
+                    ` : ''}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    ${big == 1 ? `
+                        <a class="subopt" onclick="playl();hidephnopt();">playl</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="subopt" onclick="play();hidephnopt();">play</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    ` : ''}
+                    ${localStorage.getItem("col") != 1 ? `<a class="subopt" onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : ''}
+                    ${localStorage.getItem("col") != 2 ? `<a class="subopt" onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : ''}
+                    ${localStorage.getItem("col") != 3 ? `<a class="subopt" onclick="ds('f');hidephnopt();">foreign</a>` : ''}
+                </div>
+            </td>
+        </tr>
+        ${big == 1 ? `
+        <tr>
+            <td>
+                <div>
+                    <a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a>
+                    <a class="subopt" onclick="rotate(180);hidephnopt();">rotate x2</a>
+                    <a class="subopt" onclick="rotate(270);hidephnopt();">rotate x3</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a>&nbsp;&nbsp;
+                    <a class="subopt" onclick="cropeditfunc('edit');hidephnopt();">Edit</a>
+                    ${(dlist.length != 0 || dblist.length != 0) ? `&nbsp;&nbsp;<a class="subopt" onclick="UnDelete();hidephnopt();">Undel</a>` : ''}
+                </div>
+            </td>
+        </tr>
+        ` : ''}
+        ${web ? `
+        <tr>
+            <td>
+                <div>
+                    <a class="subopt" onclick="resetToken();hidephnopt();">Reset token</a>&nbsp;&nbsp;
+                    <a class="subopt" onclick="refreshGit();hidephnopt();">dSync</a>
+                </div>
+            </td>
+        </tr>
+        ` : ''}
+    </table>
+</div>`;
 
-            `</div></td></tr><tr><td><div>
-<a class="subopt"  onclick="playl();hidephnopt();">playl</a>&nbsp;&nbsp;&nbsp;&nbsp;
-<a class="subopt"  onclick="play();hidephnopt();">play</a>&nbsp;&nbsp;&nbsp;&nbsp;
-`
-            + ((localStorage.getItem("col") != 1) ? `<a class="subopt"  onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
-            + ((localStorage.getItem("col") != 2) ? `<a class="subopt"  onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : '')
-            + ((localStorage.getItem("col") != 3) ? `<a class="subopt"  onclick="ds('f');hidephnopt();">foreign</a>` : '')
-            + `</div></td></tr>`
-
-            + ((big == 1) ? ((web) ? '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>'
-                : '<tr><td><div><a class="subopt" onclick="rotate(90);hidephnopt();">rotate x1</a> <a class="subopt"  onclick="rotate(180);hidephnopt();">rotate x2</a><a class="subopt"  onclick="rotate(270);hidephnopt();">rotate x3</a></div></td></tr>') : '')
-            + ((big == 1) ? `<tr><td><div><a class="subopt" onclick="cropeditfunc('crop');hidephnopt();">Crop</a> &nbsp;&nbsp;<a class="subopt"  onclick="cropeditfunc('edit');hidephnopt();">Edit</a>
-            `+ ((dlist.length != 0 || dblist.length != 0) ? `&nbsp;&nbsp;<a class="subopt"  onclick="UnDelete();hidephnopt();">Undel</a>` : ``)
-                + `</div></td></tr>` : ``)
-            +
-
-            ((web) ? `<tr><td><div><a  class="subopt" onclick="resetToken();hidephnopt();">Reset token</a>&nbsp;&nbsp;
-            <a class="subopt"  onclick="refreshGit();hidephnopt();">dSync</a></div></td>   </tr>` : ``)
-            +
-            `</table>
-        
-        </div>`;
         eHelp.onclick = () => eHelp.remove();
-    }
-    if (eHelp.parentNode) {
-        eHelp.remove();
-    } else document.querySelector("body").appendChild(eHelp);
 
+        if (eHelp.parentNode) {
+            eHelp.remove();
+        } else {
+            document.querySelector("body").appendChild(eHelp);
+        }
+    }
 }
 
 function hidephnopt() {
+    const helpEl = document.querySelector("#help");
+    const styleEl = document.querySelector("#iks_help > style");
 
-    if (document.querySelector("#help") != null) {
-        document.querySelector("#help").remove();
-        document.querySelector("#iks_help > style").remove();
+    if (helpEl != null) {
+        helpEl.remove();
     }
-}
-/*
-function phnconfirm(txt) {
-var econfirm=false;
 
-    if (document.querySelector("#confirm") == null && localStorage.getItem('hide1') != '0' && localStorage.getItem('hide') != '0') {
-        (econfirm = document.createElement("DIV")).id = "iks_confirm";
-        econfirm.innerHTML = `<style>
-        #iks_confirm{position:fixed;z-index:999999999;left:0;top:0;right:0;bottom:0;background:rgb(0,0,0,0.5);cursor:pointer;display: flex;align-items: center;}
-        .subopt{border: 2px solid #beaeae;padding: .8em;
-        }
-        #confirm{    position: fixed;
-    
-    border: 2px solid #000;
-    border-radius: 0.5em;
-    padding: 0.5em;
-    background: #000;
-    font-size: 11pt;
-    line-height: normal;
-    width: 100%;}
-    table#iks_list {
-    width: 100%;
-}
-        #iks_list tr:nth-child(2n+1){background:#eee}
-        #iks_list div{padding-right: 5px;
-    
-    border: 1px solid #000;
-    border-radius: 0.3em;
-    background: #000;
-    text-align: center;
-    font-weight: bold;
-    line-height: 3em;
-    color:white;
-    font-size: 3em;}
-    @media only screen and (max-height: 1000px) and (max-width: 1000px) {
-        #iks_list div {font-size: 1em;
-            line-height: 1.5em;
-}
-    }
-    
-    
-        </style>
-        <div id="confirm">
-        <table id="iks_list">
-        <tr><td><div>
-        `+txt+`
-        </tr></td></div>
-        <tr><td><div><a onclick="econfirm=true;hidephnconfirm();">Yes</a></div> <div><a onclick="econfirm=false;hidephnconfirm();">No</a></div></td>
-        
-        </tr>
-    
-    </table>
-        
-        </div>`;
-        econfirm.onclick = () => econfirm.remove();
-    }
-    if (econfirm.parentNode) {
-        econfirm.remove();
-    } else document.querySelector("body").appendChild(econfirm);
-return econfirm;
-}
-function confirmNew(txt){
-    if(phone){
-return phnconfirm(txt);
-    }
-    else{
-        return confirm(txt);
-    }
-}
-function hidephnconfirm() {
-
-    if (document.querySelector("#confirm") != null) {
-        document.querySelector("#confirm").remove();
-        document.querySelector("#iks_confirm > style").remove();
+    if (styleEl != null) {
+        styleEl.remove();
     }
 }
 
-*/
 /* ---------------------------Hide------------------------ */
 function hider() {
     //if(!phone) {
@@ -1291,38 +1304,6 @@ function hide(key) {
         fullscreen();
     }
     if (document.querySelector("#help") != null) { document.querySelector("#iks_help").remove(); }
-    /*if (key == 186) {
-        if (!($('.images').is(":visible") == $('.images').is(":hidden"))) {
-            if (localStorage.getItem('hide') == '1') {
-                if (document.querySelector("body > iframe") == null) {
-                    $('.images').hide();
-                    $('.reload').hide();
-                    if (big == 1) {
-                        $('#image-viewer').hide();
-                    }
-                    document.title = 'Home | AIUB';
-                    var iframe = document.createElement('iframe');
-                    iframe.style = "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"
-                    iframe.src = 'https://www.aiub.edu/';
-                    document.body.appendChild(iframe);
-                    localStorage.setItem('hide1', 0);
-                }
-            } else {
-                document.title = err[ed];
-                $('.images').hide();
-                $('.reload').hide();
-                if (big == 1) {
-                    $('#image-viewer').hide();
-                }
-
-            }
-            if (aaudio == 1) {
-                audio.pause();
-            }
-
-        }
-    } else if (key == 222||key == 111) {
-        */
 
     if (!($('.images').is(":hidden"))) {
         //if (localStorage.getItem('hide1') == '1') {
@@ -1333,17 +1314,7 @@ function hide(key) {
         if (big == 1) {
             $('#image-viewer').hide();
         }
-        /*} else {
-            if (document.querySelector("body > iframe") == null) {
-                $('.images').hide();
-                $('.reload').hide();
-                var iframe = document.createElement('iframe');
-                document.title = 'Home | AIUB';
-                iframe.style = "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;"
-                iframe.src = 'https://www.aiub.edu/';
-                document.body.appendChild(iframe);
-            }
-        }*/
+
         if (aaudio == 1) {
             audio.pause();
         }
@@ -1353,24 +1324,6 @@ function hide(key) {
 }
 
 function unhide(key) {
-    /*
-        if (key == 186) {
-            if (document.querySelector("body > iframe") != null) {
-                document.querySelector("body > iframe").remove();
-                localStorage.setItem('hide1', 1);
-                jq();
-                document.title = 'Gallery';
-                $('.images').show();
-                $('.reload').show();
-                if (big == 1) {
-                    $('#image-viewer').show();
-                }
-                if (aaudio == 1) {
-                    audio.play();
-                }
-            }
-        } else if (key == 222||key == 111) {
-            */
     if ($('.images').is(":hidden") && document.querySelector("body > iframe") == null) {
         localStorage.setItem('hide', 1);
         document.title = 'Gallery';
@@ -1384,7 +1337,6 @@ function unhide(key) {
             audio.play();
         }
     }
-    //}
 
 
 }
@@ -1532,20 +1484,6 @@ function childnum(elm) {
 
 
 
-/*window.addEventListener('wheel', function(event)
-{
-   if (event.deltaY < -120 && event.deltaY>-130)
-   {
-      leftl();
-  }
-  else if (event.deltaY > 120 && event.deltaY<130)
-  {
-      rightl();
-  }
-});*/
-
-
-//panzoom
 const panner = () => {
     panelem = document.querySelector("#full-image");
 
@@ -1617,11 +1555,11 @@ var idlefunc = () => {
 idlefunc();
 
 //shake event
-var phonetriggerhide=()=>{
+var phonetriggerhide = () => {
     phide1 = 0;
     phide2 = 0;
     phide3 = 0;
-    if(!$('.images').is(":hidden")&&phone&&localStorage.getItem('hider')=='on'){
+    if (!$('.images').is(":hidden") && phone && localStorage.getItem('hider') == 'on') {
         phide();
     }
 }
