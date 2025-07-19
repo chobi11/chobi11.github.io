@@ -1194,7 +1194,7 @@ table#iks_list {
                         <a class="subopt" onclick="play();hidephnopt();">play</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     ` : ''}
                     ${localStorage.getItem("col") != 1 ? `<a class="subopt" onclick="ds('a');hidephnopt();">mix</a>&nbsp;&nbsp;&nbsp;&nbsp;` : ''}
-                    ${localStorage.getItem("col") != 2 ? `<a class="subopt" onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : ''}
+                    ${(localStorage.getItem("col") != 2 && localStorage.getItem("token")!=undefined) ? `<a class="subopt" onclick="ds('d');hidephnopt();">desi</a>&nbsp;&nbsp;&nbsp;&nbsp;` : ''}
                     ${localStorage.getItem("col") != 3 ? `<a class="subopt" onclick="ds('f');hidephnopt();">foreign</a>` : ''}
                 </div>
             </td>
