@@ -2,12 +2,12 @@ import os
 import shutil
 import random
 
-A = r"F:\nnn\gallery-dl\coomerparty\onlyfans"  # Replace with your source main folder
-B = r"F:\onn"  # Replace with your target main folder
+A = r"E:\nn"  # Replace with your source main folder
+B = r"E:\c"  # Replace with your target main folder
 
 
 # Settings
-start_folder_num = 131
+start_folder_num = 135
 max_files_per_folder = 5000
 files_per_batch = 10
 

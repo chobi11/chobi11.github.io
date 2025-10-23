@@ -16,9 +16,9 @@ def save(filename, content):
 
 
 str_var = ""
-k = 1
+k = 157
 for i in range(len(on)):
-    str_var += " " + on[i]
+    str_var += " " + on[i]['l']
     #print(i)
     if i != 0 and i % 1 == 0:  
         print(f"{k}.bat")
